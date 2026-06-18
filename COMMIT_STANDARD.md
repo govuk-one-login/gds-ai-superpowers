@@ -97,6 +97,27 @@ feat(scope): Add feature.        # period, capitalised "Add"
 
 ---
 
+## Versioning — how types drive releases
+
+Releases are **automated from these commit types**: on merge to `main`,
+`scripts/next-version.sh` derives the next [semantic version](https://semver.org)
+from the commits since the last release tag, and CI tags + publishes the bundle. The
+reviewed merge is the human approval — the version bump is *derived*, not decided in a
+separate step. So the type you choose isn't cosmetic; it sets the published version.
+
+| Commit | Release bump |
+|--------|--------------|
+| `BREAKING CHANGE:` footer, or `type!:` (a renamed skill folder, or a moved cited `_standards/` file) | **major** |
+| `feat:` · `security(standards):` (a standards-**content** change) | **minor** |
+| `fix:` · `security:` (tooling hardening) · `refactor:` · `perf:` | **patch** |
+| `docs:` · `chore:` · `ci:` · `style:` | no release |
+
+When several commits land together, the **highest** bump wins. A standards-content
+change is a *minor* (not a patch) because it changes the output consumers depend on —
+making standards drift visible in the version number.
+
+---
+
 ## Summary
 
 1. First line: `type(scope): imperative short description` (< 72 chars).

@@ -69,10 +69,12 @@ CHANGELOG.md               Tracks skill AND standards changes (assurance trail).
 Two install paths: `install.sh` (developer/local — links to your live clone, `git
 pull` updates instantly) and the **agent-manager bundle** (`scripts/build-bundle.sh`
 → `npx @ai-agent-manager/cli@latest https://deloittedigitaluk.github.io/cadence` — a
-versioned snapshot for consumers/CI; see `docs/onboarding-prompt.md`). The bundle is
-published to GitHub Pages by `.github/workflows/publish-bundle.yml` on a `v*.*.*`
-tag, accumulating versions on the `gh-pages` branch. The bundle is a *generated*
-artifact; the repo stays the single source of truth.
+versioned snapshot for consumers/CI; see `docs/onboarding-prompt.md`). Releases are
+automatic: on merge to `main`, `.github/workflows/publish-bundle.yml` derives the next
+semver from the Conventional Commits (`scripts/next-version.sh`; type→bump in
+`COMMIT_STANDARD.md`), tags it, and publishes to GitHub Pages, accumulating versions on
+the `gh-pages` branch. The reviewed PR merge is the approval. The bundle is a
+*generated* artifact; the repo stays the single source of truth.
 
 ## Critical conventions
 

@@ -107,13 +107,15 @@ zip_entries=(manifest.json _standards _templates "${skill_dirs[@]}")
 rm -rf "$STAGE"
 echo "  wrote bundle.zip + bundle.zip.sha256"
 
-# 4. index.json — list every built version present under dist/agents/.
+# 4. index.json — list every built version present under dist/agents/, in
+#    semver order (numeric per component, so 0.10.0 sorts after 0.9.0 — the CLI
+#    treats the LAST entry as "latest", so this ordering must be correct).
 INDEX="$REPO_ROOT/dist/agents/index.json"
 versions_json="$(
   for vd in "$REPO_ROOT"/dist/agents/*/; do
     [[ -f "$vd/manifest.json" ]] || continue
     jq '{version, published}' "$vd/manifest.json"
-  done | jq -s 'sort_by(.version)'
+  done | jq -s 'sort_by(.version | split(".") | map(tonumber))'
 )"
 jq -n --arg lastUpdated "$PUBLISHED" --argjson agents "$versions_json" \
   '{lastUpdated: $lastUpdated, agents: $agents}' > "$INDEX"
