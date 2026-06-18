@@ -12,11 +12,6 @@ name: Release & publish bundle
 # working.
 #
 # No third-party actions — only actions/checkout and the built-in token.
-#
-# NOTE ON BRANCH PROTECTION: this job pushes the release commit + tag back to `main`.
-# `main` is currently unprotected. If you later require PRs on `main`, either grant this
-# workflow (the github-actions bot) bypass for the release commit, or switch to a
-# release-PR model — otherwise the push-back step will be rejected.
 
 on:
   push:
