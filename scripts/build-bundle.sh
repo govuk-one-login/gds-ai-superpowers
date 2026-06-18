@@ -10,8 +10,9 @@
 #   dist/agents/<version>/manifest.json        also embedded in the zip (kept here for reference)
 #
 # This is the publishable tree an agent-manager bundle server serves at
-# <base-url>/agents/... . Host-agnostic: copy dist/agents/* to the server (e.g.
-# bootstrap.deloittecloud.co.uk) once the publish target/convention is agreed.
+# <base-url>/agents/... . Host-agnostic — CI publishes it to GitHub Pages via
+# .github/workflows/publish-bundle.yml (served at deloittedigitaluk.github.io/cadence),
+# but the same dist/ can be copied to any static host.
 #
 # WHY THE WHOLE TREE IS COPIED. agent-manager discovers skills one level deep
 # (<bundleRoot>/<skill>/SKILL.md) and, on install, symlinks each selected skill

@@ -1,0 +1,106 @@
+name: Publish bundle to GitHub Pages
+
+# Builds the agent-manager bundle from the skills tree and publishes it to the
+# `gh-pages` branch, which GitHub Pages serves at
+# https://<owner>.github.io/<repo>/agents/... — the bundle URL consumers point
+# `npx @ai-agent-manager/cli@latest` at.
+#
+# Versions ACCUMULATE: each run seeds dist/ with everything already published on
+# gh-pages, then adds this release and regenerates the index across all of them,
+# so pinned `bundle-version:` installs keep working.
+#
+# Trigger by pushing a version tag that matches the VERSION file:
+#   git tag "v$(cat VERSION)" && git push origin --tags
+# or run manually (workflow_dispatch), which publishes the current VERSION.
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+
+# Needed to push the gh-pages branch with the built-in token.
+permissions:
+  contents: write
+
+# Never let two publishes race on the gh-pages branch.
+concurrency:
+  group: publish-bundle
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      # Bring the already-published bundle (all prior versions) into ./published.
+      # First-ever run has no gh-pages branch yet — tolerate that.
+      - name: Check out existing gh-pages (prior versions)
+        uses: actions/checkout@v4
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: published
+
+      - name: Determine version
+        id: ver
+        run: |
+          set -euo pipefail
+          file_v="$(tr -d '[:space:]' < VERSION)"
+          if [ "${GITHUB_REF_TYPE:-}" = "tag" ]; then
+            tag_v="${GITHUB_REF_NAME#v}"
+            if [ "$tag_v" != "$file_v" ]; then
+              echo "::error::tag v$tag_v does not match VERSION file ($file_v). Bump VERSION or fix the tag."
+              exit 1
+            fi
+            version="$tag_v"
+          else
+            version="$file_v"
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "Publishing version: $version"
+
+      # Seed dist/ with every previously published version so the index, regenerated
+      # by build-bundle.sh, lists old + new. The old index.json is dropped (rebuilt).
+      - name: Seed prior versions into dist/
+        run: |
+          set -euo pipefail
+          mkdir -p dist/agents
+          if [ -d published/agents ]; then
+            cp -R published/agents/. dist/agents/
+            rm -f dist/agents/index.json
+            echo "Seeded prior versions:"
+            ls -1 dist/agents
+          else
+            echo "No existing gh-pages content — first publish."
+          fi
+
+      - name: Build bundle (adds this version, regenerates index across all)
+        run: ./scripts/build-bundle.sh "${{ steps.ver.outputs.version }}"
+
+      # Serve files verbatim; stop GitHub Pages running Jekyll over the output.
+      - name: Disable Jekyll
+        run: touch dist/.nojekyll
+
+      # Publish the merged dist/ (all versions + fresh index) to gh-pages. We rebuild
+      # the full published state every run and force-push it, so the branch is always
+      # exactly dist/. No third-party actions — just the built-in token.
+      - name: Publish to gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          cd dist
+          git init -q
+          git checkout -q -b gh-pages
+          git add -A
+          git -c user.name='github-actions[bot]' \
+              -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
+              commit -q -m "Publish bundle v${{ steps.ver.outputs.version }}"
+          git push -f \
+            "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" \
+            gh-pages
+          echo "Published to gh-pages. Pages will serve it shortly at:"
+          echo "  https://$(echo "${GITHUB_REPOSITORY%%/*}" | tr '[:upper:]' '[:lower:]').github.io/${GITHUB_REPOSITORY#*/}/agents/index.json"

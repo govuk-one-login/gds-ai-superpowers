@@ -29,9 +29,15 @@ this is the record of what changed and when, which feeds the assurance trail.
   headless), alongside the existing clone + `install.sh` developer path. `dist/` is gitignored
   (generated artifact). Windows is unsupported on this path (symlink-only; copy fallback orphans
   the shared trees).
+- **GitHub Pages publishing.** `.github/workflows/publish-bundle.yml` builds the bundle on a
+  `v*.*.*` tag and publishes it to the `gh-pages` branch, served at
+  `https://deloittedigitaluk.github.io/cadence`. Versions accumulate (the workflow seeds from the
+  already-published branch and regenerates the index across all of them), so pinned
+  `bundle-version:` installs keep working. No third-party actions; integrity `.sha256` is served
+  and verified. Accumulation logic verified locally across two versions.
 - **Library versioning.** A top-level `VERSION` file (starting at `0.1.0`) is the source of the
   bundle version; a standards change should bump it and republish (assurance trail for bundle
-  consumers).
+  consumers). Release flow: bump `VERSION` → tag `v$(cat VERSION)` → push tags → CI publishes.
 - Initial release of cadence — a generic, sector-agnostic skill library for Claude Code.
 - Four lifecycle composites: `produce-tech-design` (architect), `prepare-stories` (product),
   `plan-and-implement` (dev), `assure-quality` (QA).

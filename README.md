@@ -137,6 +137,21 @@ you installed them.
 **To update:** `git pull` in the clone. Re-run `./install.sh` only when a new skill was
 added or a pointer broke.
 
+### Or install without cloning (agent-manager)
+
+If you just want to *use* the skills (not author them), install the published bundle with
+the [`@ai-agent-manager/cli`](https://github.com/ai-agent-manager/agent-manager) tool — no
+clone needed:
+
+```bash
+npx -y @ai-agent-manager/cli@latest https://deloittedigitaluk.github.io/cadence
+```
+
+This installs a versioned snapshot (pick your skills in the prompt, or pin a
+`bundle-version:` for CI). It's macOS/Linux only and updates via re-running rather than
+`git pull` — see [`docs/onboarding-prompt.md`](docs/onboarding-prompt.md) for the details
+and trade-offs.
+
 ### Prefer to let Claude do it
 
 After cloning, start Claude Code in the repo and paste the onboarding prompt from

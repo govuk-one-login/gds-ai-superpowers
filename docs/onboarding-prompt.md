@@ -53,7 +53,7 @@ rather than a live clone.
 Interactive (pick tools + skills in a TUI):
 
 ```bash
-npx -y @ai-agent-manager/cli@latest https://bootstrap.deloittecloud.co.uk
+npx -y @ai-agent-manager/cli@latest https://deloittedigitaluk.github.io/cadence
 # choose Claude Code, a scope (system → ~/.claude/skills, or repo → ./.claude/skills),
 # and the cadence skills you want.
 ```
@@ -71,7 +71,7 @@ skills:
 ```
 
 ```bash
-npx -y @ai-agent-manager/cli@latest https://bootstrap.deloittecloud.co.uk --config ai-skills.yml
+npx -y @ai-agent-manager/cli@latest https://deloittedigitaluk.github.io/cadence --config ai-skills.yml
 ```
 
 Either way, agent-manager downloads the bundle, caches it under
@@ -90,9 +90,19 @@ directory. Because the bundle ships the whole tree intact, every skill's shared
   Windows it falls back to *copying* a skill's folder, which orphans the shared
   `_standards/`/`_templates/` trees and breaks cadence's references. Windows users
   need developer-mode/admin symlinks, or should use the clone + `install.sh` path.
-- **Publishing the bundle** (maintainers): run `./scripts/build-bundle.sh` to
-  generate the publishable `dist/agents/` tree (index + versioned `bundle.zip`),
-  then copy it to the bundle server's `agents/` path. The hosting target
-  (`bootstrap.deloittecloud.co.uk` vs a cadence-owned URL) and how cadence's index
-  coexists with any other bundle on that host are a coordination point with the
-  agent-manager maintainers — confirm before publishing.
+- **Publishing a release** (maintainers): the bundle is served from **GitHub Pages**
+  (`https://deloittedigitaluk.github.io/cadence`, the `gh-pages` branch). To cut a
+  release:
+  1. Bump `VERSION`, update `CHANGELOG.md`, commit to `main`.
+  2. `git tag "v$(cat VERSION)" && git push origin --tags`.
+  3. The `Publish bundle to GitHub Pages` workflow
+     (`.github/workflows/publish-bundle.yml`) runs `scripts/build-bundle.sh`, merges
+     the new version with all previously published ones (versions accumulate, so
+     pinned `bundle-version:` installs keep working), and pushes `gh-pages`. Pages
+     serves it within ~1 minute.
+
+  **One-time setup:** the repo must be **public**, and Pages must be enabled —
+  Settings → Pages → Source: *Deploy from a branch* → `gh-pages` / root. (The
+  `.sha256` sidecar the build emits gives consumers real integrity verification on
+  Pages.) To build the `dist/agents/` tree locally without publishing, just run
+  `./scripts/build-bundle.sh`.
