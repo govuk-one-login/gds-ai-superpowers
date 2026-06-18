@@ -10,8 +10,9 @@
 #   dist/agents/<version>/manifest.json        also embedded in the zip (kept here for reference)
 #
 # This is the publishable tree an agent-manager bundle server serves at
-# <base-url>/agents/... . Host-agnostic: copy dist/agents/* to the server (e.g.
-# bootstrap.deloittecloud.co.uk) once the publish target/convention is agreed.
+# <base-url>/agents/... . Host-agnostic — CI publishes it to GitHub Pages via
+# .github/workflows/publish-bundle.yml (served at deloittedigitaluk.github.io/cadence),
+# but the same dist/ can be copied to any static host.
 #
 # WHY THE WHOLE TREE IS COPIED. agent-manager discovers skills one level deep
 # (<bundleRoot>/<skill>/SKILL.md) and, on install, symlinks each selected skill
@@ -106,13 +107,15 @@ zip_entries=(manifest.json _standards _templates "${skill_dirs[@]}")
 rm -rf "$STAGE"
 echo "  wrote bundle.zip + bundle.zip.sha256"
 
-# 4. index.json — list every built version present under dist/agents/.
+# 4. index.json — list every built version present under dist/agents/, in
+#    semver order (numeric per component, so 0.10.0 sorts after 0.9.0 — the CLI
+#    treats the LAST entry as "latest", so this ordering must be correct).
 INDEX="$REPO_ROOT/dist/agents/index.json"
 versions_json="$(
   for vd in "$REPO_ROOT"/dist/agents/*/; do
     [[ -f "$vd/manifest.json" ]] || continue
     jq '{version, published}' "$vd/manifest.json"
-  done | jq -s 'sort_by(.version)'
+  done | jq -s 'sort_by(.version | split(".") | map(tonumber))'
 )"
 jq -n --arg lastUpdated "$PUBLISHED" --argjson agents "$versions_json" \
   '{lastUpdated: $lastUpdated, agents: $agents}' > "$INDEX"
