@@ -297,3 +297,9 @@ before merging. See [`CHANGELOG.md`](CHANGELOG.md) for the record of changes.
 Commit messages follow [`COMMIT_STANDARD.md`](COMMIT_STANDARD.md) (Conventional Commits).
 Changes under `_standards/` carry extra weight — note the *why* in the commit body and in
 `CHANGELOG.md`, since they alter every dependent skill's output.
+
+---
+
+## License
+
+Released under the [MIT License](LICENSE) © DeloitteDigitalUK.
