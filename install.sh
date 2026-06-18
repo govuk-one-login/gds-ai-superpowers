@@ -9,20 +9,20 @@
 # Claude Code discovers skills FLAT: a skill must sit at
 # `.claude/skills/<name>/SKILL.md` (one level deep), and the folder name is what
 # becomes the slash command (`/<name>`). A SKILL.md any deeper is not discovered
-# at all. Our skills live in an organised tree (`skills/atomic/<name>/`,
-# `skills/composite/<name>/`), so we cannot just symlink the whole `skills/`
-# tree onto `.claude/skills` — that buries every skill two levels down where
-# discovery never finds it.
+# at all. Our skills live one level deep under `skills/<name>/`, alongside the
+# shared `skills/_standards/` and `skills/_templates/` reference trees (which
+# have no SKILL.md and so are never discovered as skills). The atomic-vs-composite
+# distinction lives in each SKILL.md's `kind:` frontmatter, not in the folders.
 #
-# Instead we drop one flat symlink per skill:
+# We drop one flat symlink per skill:
 #
-#   .claude/skills/threat-model -> <repo>/skills/atomic/threat-model
+#   .claude/skills/threat-model -> <repo>/skills/threat-model
 #
 # The link target is the real folder inside the intact repo tree, so the skills'
-# `../../_standards/...` and `../../_templates/...` references still resolve
-# (they resolve against the target's real location, not the link). The tree must
-# stay intact in the clone; we only add pointers into it. A `git pull` in the
-# clone updates everyone — no re-run needed for content changes.
+# `../_standards/...` and `../_templates/...` references still resolve (they
+# resolve against the target's real location, not the link). The tree must stay
+# intact in the clone; we only add pointers into it. A `git pull` in the clone
+# updates everyone — no re-run needed for content changes.
 #
 # Per-skill links also mean the library COEXISTS with other skills in the same
 # `.claude/skills` directory instead of trying to own it. We never clobber a
@@ -68,6 +68,7 @@ seen=" "        # space-delimited list of skill names, for duplicate detection
 # Enumerate skills: any directory under skills/ that contains a SKILL.md. The
 # leading-underscore dirs (_standards, _templates) contain no SKILL.md, so they
 # are naturally excluded — they are reached only via the skills' relative paths.
+# (Skills are one level deep, but we keep the find depth-agnostic for safety.)
 while IFS= read -r skill_md; do
   skill_dir="$(cd "$(dirname "$skill_md")" && pwd)"
   skill_name="$(basename "$skill_dir")"
@@ -129,14 +130,14 @@ fi
 
 # Verify the shared _standards/ files resolve — probe a link WE own (not a
 # foreign conflict). Because our link points at the real folder in the repo,
-# `pwd -P` from inside it lands on the true path, where `../../_standards` lives.
+# `pwd -P` from inside it lands on the true path, where `../_standards` lives.
 probe_name=""
 for n in ${created[@]+"${created[@]}"} ${relinked[@]+"${relinked[@]}"} ${skipped[@]+"${skipped[@]}"}; do
   probe_name="$n"; break
 done
 if [[ -n "$probe_name" ]]; then
   real="$(cd "$SKILLS_DIR/$probe_name" && pwd -P)"
-  if [[ -f "$real/../../_standards/security/stride.md" ]]; then
+  if [[ -f "$real/../_standards/security/stride.md" ]]; then
     echo
     echo "Shared _standards/ resolve through the link: OK"
   else
@@ -179,18 +180,18 @@ fi
 
 # Drift guard for the composite flow map: every composite skill must be named in
 # docs/flows.md, so the pipeline map can't silently fall behind a new or renamed
-# composite. Cheap grep test; catches a missing composite, not a stale step inside
-# one. Non-fatal warn.
+# composite. Composites are now identified by `kind: composite` in their SKILL.md
+# frontmatter (the folders are flat). Cheap grep test; catches a missing
+# composite, not a stale step inside one. Non-fatal warn.
 flows_doc="$REPO_ROOT/docs/flows.md"
-comp_dir="$SKILLS_SRC/composite"
-if [[ -f "$flows_doc" && -d "$comp_dir" ]]; then
+if [[ -f "$flows_doc" ]]; then
   flow_drift=0
   while IFS= read -r comp_md; do
     cname="$(basename "$(dirname "$comp_md")")"
     if ! grep -q "$cname" "$flows_doc"; then
       echo "DRIFT: composite '$cname' is not documented in docs/flows.md"; flow_drift=1
     fi
-  done < <(find "$comp_dir" -name SKILL.md -type f 2>/dev/null)
+  done < <(grep -rlE '^kind:[[:space:]]*composite[[:space:]]*$' "$SKILLS_SRC" --include=SKILL.md 2>/dev/null)
   echo
   if [[ "$flow_drift" -eq 0 ]]; then
     echo "Composite flow-map drift guard: OK (every composite is in docs/flows.md)"

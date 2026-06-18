@@ -7,15 +7,21 @@ and a description that triggers it at the right moment and not the wrong one.
 ## Anatomy
 
 ```
-atomic/<skill-name>/
-└── SKILL.md           required: YAML frontmatter (name, description) + instructions
+skills/<skill-name>/
+└── SKILL.md           required: YAML frontmatter (name, kind, description) + instructions
 ```
+
+Every skill is a flat folder one level deep under `skills/` (the depth Claude Code
+discovers). Frontmatter carries `name:`, then `kind:` (`atomic` or `composite`),
+then `description:`. There are no `atomic/`/`composite/` folders — the `kind:`
+field is the distinction; INDEX.md groups by it.
 
 Shared reference material does NOT go inside the skill. It goes in:
 - `_standards/<domain>/<file>.md` — encoded standards, cited by relative path
 - `_templates/<file>.md` — house output formats
 
-Reference them from SKILL.md as `../../_standards/...` and `../../_templates/...`.
+Reference them from SKILL.md as `../_standards/...` and `../_templates/...` (one
+`../` — skills and the shared trees are siblings under `skills/`).
 `install.sh` drops one flat symlink per skill pointing at the skill's real folder
 in the intact `skills/` tree, so these relative paths resolve against that real
 location. Never copy a standards file into a skill — that creates drift, which is
@@ -75,6 +81,10 @@ overlapping triggers, so:
    warns if a composite is missing from `flows.md` entirely, but it can't catch a
    stale step inside one — that's on you. Keep the map honest; it's the page people
    read to understand what runs when.
+6. **Frontmatter is complete and the name is unique.** `name:`, `kind:`
+   (`atomic`/`composite`), and a trigger `description:` are all present, and the
+   folder name doesn't collide with an existing skill (they share one command
+   namespace — `install.sh` will refuse a duplicate).
 
 ## Tooling
 

@@ -200,6 +200,7 @@ optionality:
 
 1. Update the relevant section here (diagram + table).
 2. It's in `docs/authoring.md`'s "before you merge" checklist.
-3. `install.sh` runs a drift guard: every `skills/composite/*` skill must be named in
-   this file, and it warns if one is missing. (That catches a new or renamed composite;
-   it can't catch a stale step inside one — that's on the author.)
+3. `install.sh` runs a drift guard: every composite skill (`kind: composite` in its
+   SKILL.md frontmatter) must be named in this file, and it warns if one is missing.
+   (That catches a new or renamed composite; it can't catch a stale step inside one —
+   that's on the author.)

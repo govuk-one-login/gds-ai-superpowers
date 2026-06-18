@@ -38,3 +38,61 @@ run it blind" one-liner on purpose: a blind pipe-to-shell install is exactly the
 software-supply-chain pattern this library's own `threat-model` skill flags
 (OWASP A03:2025). A plain clone of a reviewed repo, then a script you can read,
 is the posture we want to model.
+
+## Installing via agent-manager (bundle distribution)
+
+The clone-and-`install.sh` flow above is the **developer / local** path — links
+point at your live clone, so `git pull` updates everything instantly. It's the
+right path if you're authoring or editing skills.
+
+For **consumers** who just want the skills installed (and for CI), cadence is also
+published as an **agent-manager bundle** (the `@ai-agent-manager/cli` tool, the
+Claude Code plugin-marketplace installer). This installs a **versioned snapshot**
+rather than a live clone.
+
+Interactive (pick tools + skills in a TUI):
+
+```bash
+npx -y @ai-agent-manager/cli@latest https://bootstrap.deloittecloud.co.uk
+# choose Claude Code, a scope (system → ~/.claude/skills, or repo → ./.claude/skills),
+# and the cadence skills you want.
+```
+
+Headless / CI (pin a version, list skills) — create `ai-skills.yml`:
+
+```yaml
+tools: claude-code
+scope: repo            # or: system
+bundle-version: 0.1.0  # pin; omit for latest
+skills:
+  - produce-tech-design
+  - threat-model
+  - plan-and-implement
+```
+
+```bash
+npx -y @ai-agent-manager/cli@latest https://bootstrap.deloittecloud.co.uk --config ai-skills.yml
+```
+
+Either way, agent-manager downloads the bundle, caches it under
+`~/.agentman/bundles/<version>/`, and symlinks each chosen skill into your skills
+directory. Because the bundle ships the whole tree intact, every skill's shared
+`../_standards/` and `../_templates/` references still resolve.
+
+**Things to know about the bundle path:**
+
+- **It's a snapshot, not a live clone.** Updates don't arrive via `git pull` — you
+  re-run with `--update` to pull a newer published version. A standards change is
+  only picked up once a new bundle version is published (see
+  `scripts/build-bundle.sh` and `CHANGELOG.md` — version-bump-on-standards-change
+  is the assurance trail for bundle consumers).
+- **macOS / Linux only, in practice.** agent-manager installs by symlink; on
+  Windows it falls back to *copying* a skill's folder, which orphans the shared
+  `_standards/`/`_templates/` trees and breaks cadence's references. Windows users
+  need developer-mode/admin symlinks, or should use the clone + `install.sh` path.
+- **Publishing the bundle** (maintainers): run `./scripts/build-bundle.sh` to
+  generate the publishable `dist/agents/` tree (index + versioned `bundle.zip`),
+  then copy it to the bundle server's `agents/` path. The hosting target
+  (`bootstrap.deloittecloud.co.uk` vs a cadence-owned URL) and how cadence's index
+  coexists with any other bundle on that host are a coordination point with the
+  agent-manager maintainers — confirm before publishing.

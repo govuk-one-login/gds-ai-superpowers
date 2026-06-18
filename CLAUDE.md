@@ -19,69 +19,90 @@ whole reason the library exists.
 ## Layout
 
 ```
-skills/
+skills/                 Every skill is a flat folder skills/<name>/ (one level deep —
+                        what Claude Code discovers). The atomic-vs-composite distinction
+                        lives in each SKILL.md's `kind:` frontmatter, not in the folders;
+                        INDEX.md groups them for humans.
 ├── _standards/      Shared reference files (the encoded standards). NOT skills — no SKILL.md.
 │   ├── security/    stride, owasp (Top 10:2025), masvs (v2), ncsc-cloud-principles, ncsc-secure-by-design
 │   ├── accessibility/ wcag (2.2 AA spine), ios, android (per-platform lenses)
 │   ├── engineering-way/ engineering slice: README register (ENG-* house IDs) + testing, api-compatibility, code-review, languages, source-control, operability
 │   └── platform/    platform-constraints lens (PLAT-* house IDs): residency, approved services, tenancy, quotas, egress, change-surface
 ├── _templates/      House output formats (threat-model-template, tech-design-template, project-*-template).
-├── atomic/          Single-purpose skills (apply a standard, run a check, make an artifact).
-│   ├── frame-design/             built — interactive office-hours framing (pipeline entry)
-│   ├── generate-design-doc/      built — deepen a framed TD into code-grounded architecture
-│   ├── check-engineering-standards/ built — verify a TD's engineering-way commitments (ENG-*); TD-level; gated
-│   ├── check-platform-constraints/ built — verify a TD fits the platform's constraints (PLAT-*); + conditional security pass on a new platform component; gated
-│   ├── check-security-standards/ built — verify a TD against the security standards; gated
-│   ├── threat-model/             built — STRIDE spine + OWASP/MASVS/NCSC lenses; gated write-back
-│   ├── cross-model-review/       built — independent final review (separate Claude subagent); gated
-│   ├── revise-design/            built — apply a review-comment list to a TD iteratively (Accept/Modify/Reject/Defer); routes off-cap/other-skill comments; gated
-│   ├── decompose-to-stories/     built — TD + requirements → traceable, Jira-ready user stories; gated
-│   ├── check-accessibility/      built — review stories against WCAG 2.2 AA; gated write-back
-│   ├── generate-acceptance-tests/    built — story criteria → failing acceptance tests (the oracle); gated
-│   ├── generate-implementation-plan/ built — story+tests+code → impl plan (below the cap); model rec; gated
-│   ├── implement-plan/           built — dispatch a cheaper model to code to green; owns model-tiering
-│   ├── review-code/              built — independent subagent reviews the diff (general correctness); catches vacuous tests; gated apply/route
-│   ├── review-security/          built — independent subagent reviews the diff (security lens, control-cited); risk-tiered; gated apply/route
-│   ├── review-accessibility/     built — independent subagent reviews the diff (WCAG lens, SC-cited; static); risk-tiered; defers runtime residue to QA AT; gated
-│   ├── verify-story/             built (API+web; mobile gated) — QA the running build vs acceptance criteria; verify-by-automating
-│   └── setup/                    built — install/update/verify the library itself
-├── composite/       Thin recipes that sequence atomic skills.
-│   ├── produce-tech-design/      built — frame → generate → check-security → threat-model → cross-model-review
-│   ├── prepare-stories/          built — decompose-to-stories → check-accessibility (product pipeline)
-│   ├── plan-and-implement/       built — acceptance-tests → impl-plan → implement → review-code → review-security → review-accessibility (risk-tiered); model-tiered
-│   └── assure-quality/           built — verify-story; the QA-phase front door (grows with more QA atomics)
-└── INDEX.md         One line per skill — keep current; it's how people discover skills.
+│
+│   kind: atomic — single-purpose skills (apply a standard, run a check, make an artifact):
+├── frame-design/             built — interactive office-hours framing (pipeline entry)
+├── generate-design-doc/      built — deepen a framed TD into code-grounded architecture
+├── check-engineering-standards/ built — verify a TD's engineering-way commitments (ENG-*); TD-level; gated
+├── check-platform-constraints/ built — verify a TD fits the platform's constraints (PLAT-*); + conditional security pass on a new platform component; gated
+├── check-security-standards/ built — verify a TD against the security standards; gated
+├── threat-model/             built — STRIDE spine + OWASP/MASVS/NCSC lenses; gated write-back
+├── cross-model-review/       built — independent final review (separate Claude subagent); gated
+├── revise-design/            built — apply a review-comment list to a TD iteratively (Accept/Modify/Reject/Defer); routes off-cap/other-skill comments; gated
+├── decompose-to-stories/     built — TD + requirements → traceable, Jira-ready user stories; gated
+├── check-accessibility/      built — review stories against WCAG 2.2 AA; gated write-back
+├── generate-acceptance-tests/    built — story criteria → failing acceptance tests (the oracle); gated
+├── generate-implementation-plan/ built — story+tests+code → impl plan (below the cap); model rec; gated
+├── implement-plan/           built — dispatch a cheaper model to code to green; owns model-tiering
+├── review-code/              built — independent subagent reviews the diff (general correctness); catches vacuous tests; gated apply/route
+├── review-security/          built — independent subagent reviews the diff (security lens, control-cited); risk-tiered; gated apply/route
+├── review-accessibility/     built — independent subagent reviews the diff (WCAG lens, SC-cited; static); risk-tiered; defers runtime residue to QA AT; gated
+├── verify-story/             built (API+web; mobile gated) — QA the running build vs acceptance criteria; verify-by-automating
+├── setup/                    built — install/update/verify the library itself
+│
+│   kind: composite — thin recipes that sequence atomic skills:
+├── produce-tech-design/      built — frame → generate → check-security → threat-model → cross-model-review
+├── prepare-stories/          built — decompose-to-stories → check-accessibility (product pipeline)
+├── plan-and-implement/       built — acceptance-tests → impl-plan → implement → review-code → review-security → review-accessibility (risk-tiered); model-tiered
+├── assure-quality/           built — verify-story; the QA-phase front door (grows with more QA atomics)
+└── INDEX.md         One line per skill (grouped atomic/composite) — keep current; it's how people discover skills.
 docs/
 ├── authoring.md           Conventions for writing AND contributing skills (read before authoring or changing a composite).
 ├── flows.md               The single map of the composite pipelines — every step, its kind (mandatory / conditional / stop / not-built), and its gate. Keep current when a composite changes.
 └── onboarding-prompt.md   Paste-in prompts for install/update.
-install.sh                 Drops one flat symlink per skill into .claude/skills.
+install.sh                 Developer/local install: one flat symlink per skill into .claude/skills.
+scripts/build-bundle.sh    Builds the agent-manager bundle (dist/agents/, gitignored) for consumer/CI install.
+VERSION                    Library version; drives the bundle version (bump on a standards change).
 CHANGELOG.md               Tracks skill AND standards changes (assurance trail).
 ```
 
+Two install paths: `install.sh` (developer/local — links to your live clone, `git
+pull` updates instantly) and the **agent-manager bundle** (`scripts/build-bundle.sh`
+→ `npx @ai-agent-manager/cli@latest <url>` — a versioned snapshot for consumers/CI;
+see `docs/onboarding-prompt.md`). The bundle is a *generated* artifact; the repo
+stays the single source of truth.
+
 ## Critical conventions
 
-**How skills get installed (and why it's per-skill, not whole-tree).** Claude
-Code discovers skills FLAT: a skill must sit at `.claude/skills/<name>/SKILL.md`
-(one level deep), and the **folder name is the slash command** (`/<name>`) — the
-`name:` frontmatter is only a display label. A SKILL.md any deeper is not
-discovered at all. Our skills live organised at `skills/atomic/<name>/`, so
-`install.sh` does NOT symlink the whole tree onto `.claude/skills` (that buries
-every skill two levels down, where discovery never finds it — and silently
-breaks every slash command). Instead it drops one flat symlink per skill:
-`.claude/skills/threat-model -> <repo>/skills/atomic/threat-model`. Keep each
-skill's folder name unique across `atomic/` and `composite/` — they share one
-command namespace.
+**How skills get installed (and the flat layout).** Claude Code discovers skills
+FLAT: a skill must sit at `.claude/skills/<name>/SKILL.md` (one level deep), and
+the **folder name is the slash command** (`/<name>`) — the `name:` frontmatter is
+only a display label. A SKILL.md any deeper is not discovered at all. Our skills
+therefore live one level deep at `skills/<name>/` (the atomic-vs-composite split
+is carried by each SKILL.md's `kind:` frontmatter — see below — not by folders).
+`install.sh` drops one flat symlink per skill:
+`.claude/skills/threat-model -> <repo>/skills/threat-model`, coexisting with any
+other skills already in `.claude/skills`. Keep each skill's folder name unique
+across the whole library — they share one command namespace.
+
+**The `kind:` frontmatter.** Every SKILL.md carries `kind: atomic` or
+`kind: composite` after `name:`. This is the single source of the atomic/composite
+distinction now that the folders are flat: `install.sh`'s flow-map drift guard
+finds composites by `kind: composite`, and INDEX.md groups by it. A new skill must
+declare its `kind`.
 
 **Relative paths to shared files.** Skills reference shared files as
-`../../_standards/...` and `../../_templates/...` (relative to the skill's
-SKILL.md). These resolve because the per-skill symlink points at the skill's
-**real** folder inside the intact `skills/` tree, so the relative path resolves
-against that real location (the clone), not the link. So: the tree must stay
-intact in the clone, and you must never **copy** a standard out of it (that
+`../_standards/...` and `../_templates/...` (relative to the skill's SKILL.md —
+one `../` because skills and the `_standards/`/`_templates/` trees are siblings
+under `skills/`). These resolve because the per-skill symlink points at the
+skill's **real** folder inside the intact `skills/` tree, so the relative path
+resolves against that real location (the clone), not the link. So: the tree must
+stay intact in the clone, and you must never **copy** a standard out of it (that
 forks the single source of truth) — but linking individual skill folders in is
 exactly how install works now. `install.sh` is the only thing that should create
-those links.
+those links. (The agent-manager bundle distribution is the one sanctioned
+exception — a *generated* artifact that copies the whole tree intact; see
+`scripts/build-bundle.sh`.)
 
 **Never inline a standard.** Skills cite control identifiers (e.g. "A01:2025
 Broken Access Control", "MASVS-STORAGE-1", "NCSC Principle 3") and read the
@@ -112,7 +133,7 @@ every pointer resolves and no deep file is orphaned (drift guard).
 **Two kinds of standards — library vs project. Keep them distinct.** This repo is
 product-agnostic, so it owns only **cross-engagement** standards in
 `skills/_standards/` (currently security), read by skills **relative to the
-SKILL.md** (`../../_standards/...`). A **consuming project** declares its own
+SKILL.md** (`../_standards/...`). A **consuming project** declares its own
 **product/domain** standards (e.g. a domain data-format spec, GDPR, WCAG, house
 coding conventions) in `.claude/standards/` in that repo — a register (`INDEX.md`) plus
 optional per-standard reference files; the house format is
@@ -233,10 +254,11 @@ and the "before you merge" checklist (INDEX entry, CHANGELOG note, validate agai
 real work, and — for composites — update `docs/flows.md`). Read it before authoring a
 skill or changing a composite's sequence.
 
-1. Read `docs/authoring.md` and an existing skill (`atomic/threat-model`) as the
+1. Read `docs/authoring.md` and an existing skill (`threat-model`) as the
    reference pattern.
-2. Write `skills/atomic/<name>/SKILL.md`: persona, when-to-trigger description,
-   workflow, per-item output structure, and an explicit "does NOT do" section.
+2. Write `skills/<name>/SKILL.md` with `name:`, `kind:` (atomic/composite), and a
+   when-to-trigger `description:` in frontmatter; then persona, workflow, per-item
+   output structure, and an explicit "does NOT do" section.
 3. Put any reusable standard in `skills/_standards/<domain>/` and reference it by
    relative path — don't inline it. Put any output format in `skills/_templates/`.
 4. Add a one-line entry to `skills/INDEX.md` and a note to `CHANGELOG.md`.

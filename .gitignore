@@ -3,3 +3,6 @@
 
 # Local install target (./install.sh --local creates this)
 .claude/
+
+# Generated agent-manager bundle artifacts (built by scripts/build-bundle.sh)
+dist/

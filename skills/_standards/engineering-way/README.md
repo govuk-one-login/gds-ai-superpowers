@@ -3,7 +3,7 @@
 This domain encodes the **engineering slice** of the cadence library:
 how teams build — testing, API design and compatibility, code review, programming
 languages and idiom, source control, and operability. It is read by the skills that touch
-those surfaces (relative path `../../_standards/engineering-way/...` from a SKILL.md), exactly as
+those surfaces (relative path `../_standards/engineering-way/...` from a SKILL.md), exactly as
 the security and accessibility standards are.
 
 ## Why this domain has an index and `security/` / `accessibility/` do not
