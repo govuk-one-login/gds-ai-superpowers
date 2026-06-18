@@ -62,7 +62,7 @@ Security Considerations rows.
   own standard — same discovery as `check-engineering-standards` / `check-security-standards`.
 - For the **conditional** security pass only (PLAT-6 fired), cite the existing controls in
   `../_standards/security/ncsc-cloud-principles.md`, `../_standards/security/owasp.md`
-  (A03:2025 / A08:2025), and `../_standards/engineering-way/operability.md` / `source-control.md`.
+  (A03:2025 / A08:2025), and `../_standards/gds-way/operability.md` / `source-control.md`.
   Cite their IDs; never restate them.
 
 No platform baseline declared? Proceed without one: record each `PLAT-*` as `[gap] —
@@ -91,8 +91,8 @@ For each control, determine fit against the declared values:
 
 ### 3. Conditional security pass (only if `PLAT-6` fired)
 If and only if the design introduces or changes a platform component, run a security pass
-on **that new surface** — route to NCSC Cloud Principles, OWASP A03:2025/A08:2025, engineering-way
-`ENG-OPS-*`/`ENG-SCM-*`, and cite the IDs. If nothing new is introduced, skip this pass
+on **that new surface** — route to NCSC Cloud Principles, OWASP A03:2025/A08:2025, GDS Way
+`GDSW-OPS-*`/`GDSW-SCM-*`, and cite the IDs. If nothing new is introduced, skip this pass
 and record that the platform is inherited/assured-once/cited. Never re-verify an unchanged
 platform.
 
@@ -117,7 +117,7 @@ accept it yourself.
   introduces (PLAT-6).
 - It does not invent the project's platform values (regions, approved services, quotas) — it
   reads them from the declared baseline, or records `[gap]` when none is declared.
-- It does not mint new security controls — the conditional pass cites NCSC / OWASP / engineering-way.
+- It does not mint new security controls — the conditional pass cites NCSC / OWASP / GDS Way.
 - It does not set or accept a residual platform gap or waiver — it proposes; a human accepts.
 - It does not sign off the design.
 

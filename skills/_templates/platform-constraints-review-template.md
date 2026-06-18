@@ -38,7 +38,7 @@
 
 | New platform component | Security control cited | Finding |
 |------------------------|------------------------|---------|
-| [e.g. new CI/CD pipeline] | [NCSC CP 8 / A03:2025 / A08:2025 / ENG-SCM-* / ENG-OPS-*] | [what to add / address] |
+| [e.g. new CI/CD pipeline] | [NCSC CP 8 / A03:2025 / A08:2025 / GDSW-SCM-* / GDSW-OPS-*] | [what to add / address] |
 
 ## Dispositions (gated; the assurance trail)
 

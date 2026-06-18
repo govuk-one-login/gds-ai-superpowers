@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Build an agent-manager bundle from the Assured Engineering Superpowers skills tree.
+# Build an agent-manager bundle from the GDS AI Superpowers skills tree.
 #
 #   ./scripts/build-bundle.sh [version]
 #
@@ -11,7 +11,7 @@
 #
 # This is the publishable tree an agent-manager bundle server serves at
 # <base-url>/agents/... . Host-agnostic — CI publishes it to GitHub Pages via
-# .github/workflows/publish-bundle.yml (served at deloittedigitaluk.github.io/assured-engineering-superpowers),
+# .github/workflows/publish-bundle.yml (served at govuk-one-login.github.io/gds-ai-superpowers),
 # but the same dist/ can be copied to any static host.
 #
 # WHY THE WHOLE TREE IS COPIED. agent-manager discovers skills one level deep
@@ -43,7 +43,7 @@ STAGE="$OUT/bundle"
 rm -rf "$OUT"
 mkdir -p "$STAGE"
 
-echo "Building assured-engineering-superpowers bundle v$VERSION"
+echo "Building gds-ai-superpowers bundle v$VERSION"
 
 # 1. Stage the bundle root: every skill dir (one that has a SKILL.md) plus the two
 #    shared trees, all flat at the root.

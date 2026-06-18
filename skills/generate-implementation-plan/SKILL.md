@@ -56,12 +56,12 @@ implementer must run to green: `format → lint → type-check → unit tests �
 tests → coverage`. Read what the repo actually defines (e.g. `package.json` scripts +
 eslint/prettier/tsconfig/jest config; `build.gradle(.kts)` tasks; `.swiftlint.yml` +
 the test/coverage settings; detekt/lint/Kover). Determine the **coverage target** for
-the repo's tier (its source-map `kind`) from the engineering-way standard
-(`../_standards/engineering-way/testing.md`, `ENG-TEST-1`): the **hybrid bar** — the
-project's `.claude/standards/` value if declared, else the engineering-way **reference default**
+the repo's tier (its source-map `kind`) from the GDS Way standard
+(`../_standards/gds-way/testing.md`, `GDSW-TEST-1`): the **hybrid bar** — the
+project's `.claude/standards/` value if declared, else the GDS Way **reference default**
 (backend 85 / web 90 / iOS 85 / Android 75). Cite the control, don't restate it, and
 **report which source set the bar** (`[source: project .claude/standards]` vs
-`[source: engineering-way reference default]`). If a gate the standard expects is missing or the
+`[source: GDS Way reference default]`). If a gate the standard expects is missing or the
 repo config is below bar, record it as a **finding** (standard bar vs repo config
 mismatch) rather than silently skipping it.
 

@@ -1,4 +1,4 @@
-# ENG-API-1 Shared-contract change control — deep
+# GDSW-API-1 Shared-contract change control — deep
 
 Pull when a shared/public-contract change is contested or its "is this breaking?" call is unclear.
 

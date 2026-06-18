@@ -2,12 +2,12 @@
 name: check-engineering-standards
 kind: atomic
 description: >
-  Verify a Technical Design against the library's engineering-way standard and check
+  Verify a Technical Design against the library's GDS Way standard and check
   the engineering disciplines a TD should commit to are present and correctly cited. Use
-  for "does this design meet our engineering standards / the engineering-way", "check this TD
+  for "does this design meet our engineering standards / the GDS Way", "check this TD
   against the engineering standard", "are the right engineering commitments named",
   "fill the engineering conformance section", or the engineering step of producing a TD.
-  It maps the design's surfaces to the ENG-* controls that govern them (testing, API
+  It maps the design's surfaces to the GDSW-* controls that govern them (testing, API
   compatibility, code review, languages, source control, operability) and proposes gated
   edits. This is a TD-level CONFORMANCE check against the design-commitment controls — it
   does NOT review code or a diff (that is the implementation phase), does NOT re-do the
@@ -18,9 +18,9 @@ description: >
 # Check Engineering Standards
 
 You are acting as a lead engineer doing a **conformance pass** over a Technical Design:
-given the engineering-way standard this programme holds, which **design commitments**
+given the GDS Way standard this programme holds, which **design commitments**
 does this TD need to make, are they named, and is the design's engineering posture sound?
-Your output feeds an assurance trail, so cite the `ENG-*` control identifiers and never
+Your output feeds an assurance trail, so cite the `GDSW-*` control identifiers and never
 hand-wave.
 
 Your job is to **verify the design commits to the engineering disciplines that belong in a
@@ -33,13 +33,13 @@ The engineering standard is consumed at **two altitudes**, and this skill owns o
 TD-level half. A TD can carry a *commitment*; it cannot carry a *coverage run*. So you tick
 only the **design-commitment controls**:
 
-- `ENG-LANG-1` — the language the design chooses (and a justification if it's a new one).
-- `ENG-API-2` / `ENG-API-4` — the API versioning + backward-compatibility strategy.
-- `ENG-API-1` — that the design names how shared/public contracts are change-controlled.
-- `ENG-TEST-1` — that the design **commits to a per-`kind` coverage bar** (the *number* and
+- `GDSW-LANG-1` — the language the design chooses (and a justification if it's a new one).
+- `GDSW-API-2` / `GDSW-API-4` — the API versioning + backward-compatibility strategy.
+- `GDSW-API-1` — that the design names how shared/public contracts are change-controlled.
+- `GDSW-TEST-1` — that the design **commits to a per-`kind` coverage bar** (the *number* and
   its enforcement are realised and checked code-side).
-- `ENG-OPS-2` / `ENG-OPS-3` — the operability and documentation approach.
-- `ENG-SCM-1` / `ENG-REVIEW-1` — the source-control + review model the team commits to.
+- `GDSW-OPS-2` / `GDSW-OPS-3` — the operability and documentation approach.
+- `GDSW-SCM-1` / `GDSW-REVIEW-1` — the source-control + review model the team commits to.
 
 The **code-level realisation** of every control (actual coverage ≥ bar, linter idiom, the
 in-diff API break, anti-vacuous tests, no-PII-in-logs in code) is **not yours** — it is
@@ -48,36 +48,36 @@ check slot. Do not pretend to tick a code-level control from a TD.
 
 ## The boundary vs `check-security-standards` (keeps the two distinct)
 
-Some `ENG-*` controls cross-reference a security control. Where they do, you verify the
+Some `GDSW-*` controls cross-reference a security control. Where they do, you verify the
 **engineering discipline** and **defer the security tick** to `check-security-standards`:
 
-- `ENG-OPS-1` (no PII in logs) → A09 / MASVS-STORAGE-1 — you check "logs are structured and
+- `GDSW-OPS-1` (no PII in logs) → A09 / MASVS-STORAGE-1 — you check "logs are structured and
   a no-PII rule is in force"; the **security conformance row** is `check-security-standards`'.
-- `ENG-LANG-3` (deps pinned/scanned) → A03:2025 — you check "a lockfile + scanner exist";
+- `GDSW-LANG-3` (deps pinned/scanned) → A03:2025 — you check "a lockfile + scanner exist";
   the supply-chain security row is `check-security-standards`'.
-- `ENG-SCM-2` (secrets) → A09 — you check "secret scanning is on, history clean"; the
+- `GDSW-SCM-2` (secrets) → A09 — you check "secret scanning is on, history clean"; the
   security row is `check-security-standards`'.
 
 One row, one owning skill. You **never** write the TD's Security Considerations rows.
 
 ## Where the standard lives
 
-Read an `_standards/engineering-way/` file only for a surface the design actually touches
-(progressive disclosure). Start at `../_standards/engineering-way/README.md` (the register), then:
+Read an `_standards/gds-way/` file only for a surface the design actually touches
+(progressive disclosure). Start at `../_standards/gds-way/README.md` (the register), then:
 
-- Testing commitment / coverage bar → `../_standards/engineering-way/testing.md`
-- API / shared-module contracts → `../_standards/engineering-way/api-compatibility.md`
-- Review + source-control model → `../_standards/engineering-way/code-review.md`, `../_standards/engineering-way/source-control.md`
-- Language / stack choice → `../_standards/engineering-way/languages.md`
-- Operability / monitoring / docs → `../_standards/engineering-way/operability.md`
+- Testing commitment / coverage bar → `../_standards/gds-way/testing.md`
+- API / shared-module contracts → `../_standards/gds-way/api-compatibility.md`
+- Review + source-control model → `../_standards/gds-way/code-review.md`, `../_standards/gds-way/source-control.md`
+- Language / stack choice → `../_standards/gds-way/languages.md`
+- Operability / monitoring / docs → `../_standards/gds-way/operability.md`
 
-Cite control identifiers (e.g. "ENG-TEST-1", "ENG-API-2"). Never copy the standard's text
+Cite control identifiers (e.g. "GDSW-TEST-1", "GDSW-API-2"). Never copy the standard's text
 into the TD — one source of truth.
 
 ## Depth on demand (the deep tier)
-When you are about to record an ENG control as **Contested / Deferred / applicability Unclear**
+When you are about to record a GDSW control as **Contested / Deferred / applicability Unclear**
 and its lens line carries a `deep:` pointer, pull that one control's deep file
-(`../_standards/engineering-way/deep/<id>.md`) — a single whole-file Read of our authored
+(`../_standards/gds-way/deep/<id>.md`) — a single whole-file Read of our authored
 check / pitfalls / example — to resolve the call. Do **not** pull for routine lens-answered
 checks, and don't re-pull within this invocation. The lens stays the citable source. See
 CLAUDE.md "How standards are read".
@@ -86,27 +86,27 @@ CLAUDE.md "How standards are read".
 
 ### 1. Scope the surfaces
 From the TD, list the engineering surfaces in play (which tiers/`kind`s, HTTP APIs, shared
-modules, services that run). Read only the matching `_standards/engineering-way/*` file(s).
+modules, services that run). Read only the matching `_standards/gds-way/*` file(s).
 
 ### 2. Conformance pass, per commitment control
 For each design-commitment control above, determine whether the TD makes the commitment and
 cites it correctly:
-- Is the **language** named and supported (`ENG-LANG-1`)?
-- Does the design commit to a **coverage bar** per tier (`ENG-TEST-1`)? **Report the bar's
+- Is the **language** named and supported (`GDSW-LANG-1`)?
+- Does the design commit to a **coverage bar** per tier (`GDSW-TEST-1`)? **Report the bar's
   source** — `[source: project .claude/standards]` if the project declares one, else
-  `[source: engineering-way reference default]` (backend 85 / web 90 / iOS 85 / Android 75). An
+  `[source: GDS Way reference default]` (backend 85 / web 90 / iOS 85 / Android 75). An
   undeclared bar with no config is a gap, not a silent pass.
 - Is there an **API versioning + compatibility** strategy, and a **shared-contract
-  change-control** rule (`ENG-API-1/2/4`)?
-- Is the **operability** approach (monitoring, ADRs) named (`ENG-OPS-2/3`)?
-- Is the **review + source-control** model named (`ENG-REVIEW-1`, `ENG-SCM-1`)?
+  change-control** rule (`GDSW-API-1/2/4`)?
+- Is the **operability** approach (monitoring, ADRs) named (`GDSW-OPS-2/3`)?
+- Is the **review + source-control** model named (`GDSW-REVIEW-1`, `GDSW-SCM-1`)?
 
 For any control that cross-refs security, check the engineering discipline only and note the
 security row is `check-security-standards`'.
 
 ### 3. Emit the conformance finding set
 Produce a structured list — per control: current TD state → proposed commitment + cited
-`ENG-*` ID (+ bar source where relevant) → gap. Use
+`GDSW-*` ID (+ bar source where relevant) → gap. Use
 `../_templates/engineering-standards-review-template.md`. This is the durable analysis
 artifact, produced whether or not any write-back is accepted.
 

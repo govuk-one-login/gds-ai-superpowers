@@ -1,4 +1,4 @@
-# CLAUDE.md — Assured Engineering Superpowers
+# CLAUDE.md — GDS AI Superpowers
 
 Context and working conventions for Claude Code sessions in this repo. Read this
 before creating or editing skills.
@@ -7,7 +7,7 @@ before creating or editing skills.
 
 A composable library of agentic skills for Claude Code, encoding the
 engineering, security, accessibility, and delivery standards used on
-assurance-critical, regulated-sector engagements. Skills are small and
+UK government (GDS / GOV.UK) digital work. Skills are small and
 single-purpose; roles compose them into their own workflows.
 
 Core principle: **standards are owned by the work, not the role.** A security or
@@ -26,14 +26,14 @@ skills/                 Every skill is a flat folder skills/<name>/ (one level d
 ├── _standards/      Shared reference files (the encoded standards). NOT skills — no SKILL.md.
 │   ├── security/    stride, owasp (Top 10:2025), masvs (v2), ncsc-cloud-principles, ncsc-secure-by-design
 │   ├── accessibility/ wcag (2.2 AA spine), ios, android (per-platform lenses)
-│   ├── engineering-way/ engineering slice: README register (ENG-* house IDs) + testing, api-compatibility, code-review, languages, source-control, operability
+│   ├── gds-way/ engineering slice: README register (GDSW-* house IDs) + testing, api-compatibility, code-review, languages, source-control, operability
 │   └── platform/    platform-constraints lens (PLAT-* house IDs): residency, approved services, tenancy, quotas, egress, change-surface
 ├── _templates/      House output formats (threat-model-template, tech-design-template, project-*-template).
 │
 │   kind: atomic — single-purpose skills (apply a standard, run a check, make an artifact):
 ├── frame-design/             built — interactive office-hours framing (pipeline entry)
 ├── generate-design-doc/      built — deepen a framed TD into code-grounded architecture
-├── check-engineering-standards/ built — verify a TD's engineering-way commitments (ENG-*); TD-level; gated
+├── check-engineering-standards/ built — verify a TD's GDS Way commitments (GDSW-*); TD-level; gated
 ├── check-platform-constraints/ built — verify a TD fits the platform's constraints (PLAT-*); + conditional security pass on a new platform component; gated
 ├── check-security-standards/ built — verify a TD against the security standards; gated
 ├── threat-model/             built — STRIDE spine + OWASP/MASVS/NCSC lenses; gated write-back
@@ -68,7 +68,7 @@ CHANGELOG.md               Tracks skill AND standards changes (assurance trail).
 
 Two install paths: `install.sh` (developer/local — links to your live clone, `git
 pull` updates instantly) and the **agent-manager bundle** (`scripts/build-bundle.sh`
-→ `npx @ai-agent-manager/cli@latest https://deloittedigitaluk.github.io/assured-engineering-superpowers` — a
+→ `npx @ai-agent-manager/cli@latest https://govuk-one-login.github.io/gds-ai-superpowers` — a
 versioned snapshot for consumers/CI; see `docs/onboarding-prompt.md`). Releases are
 automatic: on merge to `main`, `.github/workflows/publish-bundle.yml` derives the next
 semver from the Conventional Commits (`scripts/next-version.sh`; type→bump in
@@ -205,11 +205,11 @@ gate must stay meaningful — skills draft and flag; humans approve and accept r
 - OWASP Top 10 = the **2025** edition (released Jan 2026), not 2021. Translate
   legacy references per `_standards/security/owasp.md`.
 - MASVS = **v2** (eight control groups; L1/L2/R levels removed).
-- Engineering-way standard = **library-owned** controls (`_standards/engineering-way/`),
-  minting **house `ENG-*` IDs** (we own their stability — do not renumber casually).
+- GDS Way standard = **library-owned** controls (`_standards/gds-way/`),
+  minting **house `GDSW-*` IDs** (we own their stability — do not renumber casually).
   Controls marked `realises:` encode sound engineering practice; controls marked
   `house convention:` are owned by a specific skill or repo artifact. Coverage *numbers*
-  and the `ENG-API-*` controls are **house convention** (no external source page). Because
+  and the `GDSW-API-*` controls are **house convention** (no external source page). Because
   this standard has no external live site, it does not require re-grounding; changes are
   maintained directly in the library.
 If you touch a standard, check it's still current and note the change in
@@ -286,14 +286,14 @@ assemble composites once the pieces are trustworthy.
 5. `cross-model-review` — DONE. Independent final review by a separate Claude
    subagent with fresh context (runs locally; gated write-back).
 6. `check-engineering-standards` — DONE. Verifies a TD against the
-   engineering-way standard (`_standards/engineering-way/`, ENG-* controls): the
+   GDS Way standard (`_standards/gds-way/`, GDSW-* controls): the
    design-commitment controls only (TD-level), engineering sibling of
    check-security-standards. Built with its standard (the third `_standards/` domain).
 7. `check-platform-constraints` — DONE. Verifies a TD **fits** the platform's declared
    constraints (`_standards/platform/`, PLAT-* house IDs: residency, approved services,
    tenancy, quotas, egress) and — **only when the design introduces/changes a platform
    component** — security-checks that new surface, citing existing controls (NCSC CP /
-   A03 / A08 / ENG-OPS/SCM). The "fit" surface no other check owned; the inherited
+   A03 / A08 / GDSW-OPS/SCM). The "fit" surface no other check owned; the inherited
    platform is cited, not re-verified. Built with its standard (the fourth `_standards/`
    domain).
 8. The architect atomic set is now complete — frame → generate → engineering →
@@ -346,10 +346,10 @@ assemble composites once the pieces are trustworthy.
   (conformance against named controls); `review-*` skills work at code/diff level
   (independent subagent on the diff).** So each standard is consumed at two altitudes by two
   skills — `check-security-standards`+`review-security`, `check-accessibility`+`review-accessibility`,
-  and the engineering-way standard by `check-engineering-standards`+`review-code`. The **three
+  and the GDS Way standard by `check-engineering-standards`+`review-code`. The **three
   code-level review lenses are complete** (general / security / accessibility); accessibility's
   runtime residue is deferred to the QA `accessibility-at-testing` slot. The only remaining
-  named dev follow-on is the machine shared-module API-compat gate (`ENG-API-1` — the dev
+  named dev follow-on is the machine shared-module API-compat gate (`GDSW-API-1` — the dev
   pipeline already routes shared-API breaks to the TD process; building it as a discrete gate
   is a separate increment).
 

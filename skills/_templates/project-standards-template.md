@@ -2,7 +2,7 @@
 
 > Copy this file to your project at `.claude/standards/INDEX.md` and fill it in.
 > It declares the standards **this project** must adhere to. The
-> Assured Engineering Superpowers skills discover it from the project root and honour it
+> GDS AI Superpowers skills discover it from the project root and honour it
 > alongside the library's own (cross-engagement) standards — they never embed a
 > product-specific standard in the library.
 >
@@ -28,7 +28,7 @@
 
 | Name | Type | Scope | Authority / link | Reference |
 |------|------|-------|------------------|-----------|
-| [sector standard, e.g. ISO 27001] | external | [scope — what surfaces it governs] | [link to standard] | — |
+| GOV.UK Service Standard | external | building good public services (14-point standard) | gov.uk/service-manual/service-standard | — |
 | Platform / CI-CD baseline & constraints | internal | **security baseline:** repo setup & branch protection, PR/review rules, CI/CD pipeline & supply-chain integrity, deploy/IaC, cloud IAM. **fit constraints:** approved region(s)/residency, approved-services list, tenancy/isolation model, resource & quota limits, network egress rules | [owning platform team / link] | [`platform-baseline.md` or —] |
 | [standard name] | external \| internal | [surfaces/topics it governs] | [link or owning team] | [`file.md` or —] |
 
@@ -49,9 +49,9 @@ controls this project must meet — cite clause/section identifiers, do not past
 copyrighted standard text. Example skeleton for `service-standard.md`:
 
 ```
-# [Standard name] — points this project must meet
+# GOV.UK Service Standard — points this project must meet
 
-- [Clause/section identifier] — [what our design must do]
-- [Clause/section identifier] — [requirement]
+- Point 5 Make sure everyone can use the service — [what our design must do]
+- Point 9 Create a secure service — [requirement]
 - ...
 ```

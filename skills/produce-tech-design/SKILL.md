@@ -32,7 +32,7 @@ gated by a recorded human decision, not by you (see "Risk-tiering" below):
 
 1. `../frame-design/SKILL.md` — interactive framing → a framed TD *(skip if a framed TD already exists)*
 2. `../generate-design-doc/SKILL.md` — deepen the framed TD into architecture *(always)*
-3. `../check-engineering-standards/SKILL.md` — verify the engineering-way commitments *(always)*
+3. `../check-engineering-standards/SKILL.md` — verify the GDS Way commitments *(always)*
 4. `../check-platform-constraints/SKILL.md` — verify the design fits the platform's constraints *(always; self-scopes)*
 5. `../check-security-standards/SKILL.md` — verify against the security standards; **proposes the sizing** *(always)*
 6. `../threat-model/SKILL.md` — STRIDE the design *(conditional on the accepted sizing)*
@@ -107,7 +107,7 @@ those sections are populated before continuing. Emit a phase summary.
 
 ### 4. Step 3 — check-engineering-standards
 Follow `../check-engineering-standards/SKILL.md` against the **same TD**. It
-verifies the design **commits** to the engineering-way disciplines a TD should carry
+verifies the design **commits** to the GDS Way disciplines a TD should carry
 (language choice, the per-`kind` coverage commitment, API versioning + shared-contract
 change control, operability, the review/source-control model), proposes gated edits, and
 **reports the coverage-bar source**. It is TD-level only — code-level realisation is the

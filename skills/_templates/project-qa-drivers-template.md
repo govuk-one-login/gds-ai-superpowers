@@ -3,7 +3,7 @@
 > Copy this file to your project at `.claude/qa-drivers.md` and fill it in.
 > It declares **which concrete tools** `verify-story` uses to drive and test each
 > surface, and **how to stand up** each target. Project-owned, same spirit as
-> `.claude/source-map.md` and `.claude/standards/`. The Assured Engineering Superpowers library
+> `.claude/source-map.md` and `.claude/standards/`. The GDS AI Superpowers library
 > stays product-agnostic — it names only *capabilities*; this file names the *tools*.
 
 ## How to use it

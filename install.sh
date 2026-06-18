@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Install the Assured Engineering Superpowers skills into Claude Code's skills directory.
+# Install the GDS AI Superpowers skills into Claude Code's skills directory.
 #
 #   ./install.sh           install globally into ~/.claude/skills
 #   ./install.sh --local   install into ./.claude/skills of the current directory

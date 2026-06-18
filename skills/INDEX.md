@@ -10,8 +10,8 @@ it is how people discover what exists. Updating it is a contribution requirement
 |-------|--------------|-------------------|
 | `check-security-standards` | Verifies a design against the named security standards (OWASP Top 10:2025, MASVS v2, NCSC Cloud Principles, Secure by Design) and completes the Security Considerations checklist, proposing gated edits. Conformance check — verifies controls; does not discover threats (that's threat-model) or accept sizing. | "does this meet our security standards", "fill the security checklist", "are the right controls named"; the security step of producing a TD. |
 | `check-accessibility` | Reviews a story set against **WCAG 2.2 AA** (web + iOS + Android lenses): filters UI-facing stories via their "Grounds in" block, adds platform-correct accessibility acceptance criteria, and flags design-level a11y blockers back to the TD — both gated. Story + design level only. Drafts and flags; does NOT certify conformance, write the accessibility statement, review built UI code, or replace AT testing. | "check accessibility", "WCAG", "add a11y acceptance criteria", "accessibility review of these stories"; the accessibility step of `prepare-stories`. |
-| `check-engineering-standards` | Verifies a **TD** against the **engineering-way standard** (`_standards/engineering-way/`, ENG-* controls): checks the design **commits** to the disciplines a TD should carry — language choice, the per-`kind` coverage commitment (reports the bar source), API versioning + shared-contract change control, operability, review/source-control model — and proposes gated edits. TD-level only (code-level realisation is the dev pipeline); defers security/a11y rows to their skills. The engineering sibling of check-security-standards in `produce-tech-design`. Does NOT review code, accept a gap, or sign off. | "does this design meet our engineering standards", "check the engineering commitments", "are the right ENG controls named"; the engineering step of producing a TD. |
-| `check-platform-constraints` | Verifies a **TD fits** the platform's constraints (`_standards/platform/`, PLAT-* house IDs: data residency, approved-services list, tenancy/isolation, resource/quota limits, network egress) read against the project's declared platform baseline — and, **only when the design introduces/changes a platform component** (new pipeline / account / cloud service), security-checks that new surface by citing existing controls (NCSC Cloud Principles, OWASP A03/A08, engineering-way ENG-OPS/SCM). The platform-fit step of `produce-tech-design`, before check-security-standards. Does NOT verify the change's application-level security (that's check-security-standards), re-verify an unchanged platform (cited, not re-checked), accept a gap, or sign off. | "does this design fit our platform", "approved services / region / quotas / egress", "we're standing up a new pipeline/account — is that sound"; the platform step of producing a TD. |
+| `check-engineering-standards` | Verifies a **TD** against the **GDS Way standard** (`_standards/gds-way/`, GDSW-* controls): checks the design **commits** to the disciplines a TD should carry — language choice, the per-`kind` coverage commitment (reports the bar source), API versioning + shared-contract change control, operability, review/source-control model — and proposes gated edits. TD-level only (code-level realisation is the dev pipeline); defers security/a11y rows to their skills. The engineering sibling of check-security-standards in `produce-tech-design`. Does NOT review code, accept a gap, or sign off. | "does this design meet our engineering standards", "check the engineering commitments", "are the right GDSW controls named"; the engineering step of producing a TD. |
+| `check-platform-constraints` | Verifies a **TD fits** the platform's constraints (`_standards/platform/`, PLAT-* house IDs: data residency, approved-services list, tenancy/isolation, resource/quota limits, network egress) read against the project's declared platform baseline — and, **only when the design introduces/changes a platform component** (new pipeline / account / cloud service), security-checks that new surface by citing existing controls (NCSC Cloud Principles, OWASP A03/A08, GDS Way GDSW-OPS/SCM). The platform-fit step of `produce-tech-design`, before check-security-standards. Does NOT verify the change's application-level security (that's check-security-standards), re-verify an unchanged platform (cited, not re-checked), accept a gap, or sign off. | "does this design fit our platform", "approved services / region / quotas / egress", "we're standing up a new pipeline/account — is that sound"; the platform step of producing a TD. |
 
 ### Generation
 | Skill | What it does | Reach for it when |
@@ -46,7 +46,7 @@ _(the dev pipeline's three code-level review lenses — review-code / review-sec
 ### Utility
 | Skill | What it does | Reach for it when |
 |-------|--------------|-------------------|
-| `setup` | Install, update, re-link, or verify the library on this machine. Wraps `install.sh` with safety checks and post-install verification. | "set up assured-engineering-superpowers", "update the skills", "why isn't my skill being discovered". |
+| `setup` | Install, update, re-link, or verify the library on this machine. Wraps `install.sh` with safety checks and post-install verification. | "set up gds-ai-superpowers", "update the skills", "why isn't my skill being discovered". |
 
 ## Composite skills
 
@@ -70,7 +70,7 @@ Not skills — reference files that skills cite. Edit once, every consumer is cu
 a control warrants it, a `<domain>/deep/<control-id>.md` file holds authored operational depth
 (check / pitfalls / example / link) that a skill pulls **only** when about to record a control
 Contested / Deferred / applicability Unclear — a single whole-file read, never the whole
-standard. See CLAUDE.md "How standards are read". Today: security ×17, engineering-way ×3,
+standard. See CLAUDE.md "How standards are read". Today: security ×17, GDS Way ×3,
 accessibility ×5 deep files (the WCAG ones pending the accessibility owner's review).
 
 | File | Encodes | Used by |
@@ -83,11 +83,11 @@ accessibility ×5 deep files (the WCAG ones pending the accessibility owner's re
 | `_standards/accessibility/wcag.md` | WCAG 2.2 AA spine (full A/AA SCs + web realisation) | check-accessibility, review-accessibility |
 | `_standards/accessibility/ios.md` | iOS realisation lens (anchored to WCAG SCs) | check-accessibility, review-accessibility |
 | `_standards/accessibility/android.md` | Android realisation lens (anchored to WCAG SCs; not yet validated) | check-accessibility, review-accessibility |
-| `_standards/engineering-way/README.md` | ENG-* register + conventions (house IDs, hybrid bars, provenance, no-duplication boundary) | check-engineering-standards |
-| `_standards/engineering-way/testing.md` | ENG-TEST-* — coverage bars (hybrid), test pyramid, anti-vacuous (→review-code), CI gate | check-engineering-standards, generate-implementation-plan, review-code |
-| `_standards/engineering-way/api-compatibility.md` | ENG-API-* — shared-contract change control, versioning, documented contracts | check-engineering-standards, generate-implementation-plan |
-| `_standards/engineering-way/code-review.md` | ENG-REVIEW-* — peer review before merge, small PRs, what review covers | check-engineering-standards |
-| `_standards/engineering-way/languages.md` | ENG-LANG-* — supported languages, idiom via linter, dependency hygiene | check-engineering-standards, review-code |
-| `_standards/engineering-way/source-control.md` | ENG-SCM-* — protected main, coding in the open, conventional commits | check-engineering-standards |
-| `_standards/engineering-way/operability.md` | ENG-OPS-* — structured logging (no PII), monitoring/alerting, docs-as-code/ADRs | check-engineering-standards |
+| `_standards/gds-way/README.md` | GDSW-* register + conventions (house IDs, hybrid bars, provenance, no-duplication boundary) | check-engineering-standards |
+| `_standards/gds-way/testing.md` | GDSW-TEST-* — coverage bars (hybrid), test pyramid, anti-vacuous (→review-code), CI gate | check-engineering-standards, generate-implementation-plan, review-code |
+| `_standards/gds-way/api-compatibility.md` | GDSW-API-* — shared-contract change control, versioning, documented contracts | check-engineering-standards, generate-implementation-plan |
+| `_standards/gds-way/code-review.md` | GDSW-REVIEW-* — peer review before merge, small PRs, what review covers | check-engineering-standards |
+| `_standards/gds-way/languages.md` | GDSW-LANG-* — supported languages, idiom via linter, dependency hygiene | check-engineering-standards, review-code |
+| `_standards/gds-way/source-control.md` | GDSW-SCM-* — protected main, coding in the open, conventional commits | check-engineering-standards |
+| `_standards/gds-way/operability.md` | GDSW-OPS-* — structured logging (no PII), monitoring/alerting, docs-as-code/ADRs | check-engineering-standards |
 | `_standards/platform/platform-constraints.md` | PLAT-* — platform fit constraints (residency, approved services, tenancy, quotas, egress, change-surface); categories here, values project-declared; PLAT-6 triggers the conditional security pass | check-platform-constraints |

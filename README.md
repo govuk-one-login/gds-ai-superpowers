@@ -1,15 +1,15 @@
-# Assured Engineering Superpowers
+# GDS AI Superpowers
 
 A library of reusable **skills** for [Claude Code](https://claude.com/claude-code)
 that encode the engineering, security, accessibility, and delivery standards used on
-assurance-critical digital engagements. Think of each skill as an experienced
+UK government (GDS / GOV.UK) digital work. Think of each skill as an experienced
 practitioner you can summon by name — a security architect, an accessibility
 reviewer, a QA engineer — who already knows the standards and walks you through the
 work, one decision at a time.
 
 The library does the standards; **you keep control**. Every skill drafts, checks, and
 proposes — it never signs off, accepts risk, or merges code on your behalf. Those stay
-human decisions, on purpose, because this is built for regulated, assurance-critical
+human decisions, on purpose, because this is built for UK government assurance
 work — where a human sign-off has to mean something.
 
 > **How to read this**
@@ -124,8 +124,8 @@ into your clone — so a `git pull` later updates every skill at once. The point
 alongside any other skills you have; nothing is overwritten.
 
 ```bash
-git clone <your-clone-url> ~/repos/assured-engineering-superpowers
-cd ~/repos/assured-engineering-superpowers
+git clone <your-clone-url> ~/repos/gds-ai-superpowers
+cd ~/repos/gds-ai-superpowers
 ./install.sh            # installs for all your projects (global)
 ./install.sh --local    # installs only into the current repo's ./.claude/skills
 ```
@@ -144,7 +144,7 @@ the [`@ai-agent-manager/cli`](https://github.com/ai-agent-manager/agent-manager)
 clone needed:
 
 ```bash
-npx -y @ai-agent-manager/cli@latest https://deloittedigitaluk.github.io/assured-engineering-superpowers
+npx -y @ai-agent-manager/cli@latest https://govuk-one-login.github.io/gds-ai-superpowers
 ```
 
 This installs a versioned snapshot (pick your skills in the prompt, or pin a
@@ -272,7 +272,7 @@ to correct. Declare it once; every future design and review inherits it.
   `review-code`, `review-security`, `review-accessibility` (implementation); `verify-story` (QA).
 - **Shared standards** in [`skills/_standards/`](skills/_standards/) — `security/`
   (STRIDE, OWASP Top 10:2025, MASVS v2, NCSC Cloud Principles, Secure by Design),
-  `accessibility/` (WCAG 2.2 AA + web / iOS / Android lenses), `engineering-way/` (the
+  `accessibility/` (WCAG 2.2 AA + web / iOS / Android lenses), `gds-way/` (the
   engineering standard: testing, API compatibility, code review, languages, source
   control, operability), and `platform/` (platform fit constraints: residency, approved
   services, tenancy, quotas, egress). Cited by every skill that touches that surface,
