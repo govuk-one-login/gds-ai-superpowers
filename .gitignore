@@ -1,0 +1,5 @@
+.DS_Store
+*.swp
+
+# Local install target (./install.sh --local creates this)
+.claude/
