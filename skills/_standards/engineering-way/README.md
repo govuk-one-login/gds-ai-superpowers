@@ -1,6 +1,6 @@
 # Engineering Way — the engineering standard (register + conventions)
 
-This domain encodes the **engineering slice** of the cadence library:
+This domain encodes the **engineering slice** of the Assured Engineering Superpowers library:
 how teams build — testing, API design and compatibility, code review, programming
 languages and idiom, source control, and operability. It is read by the skills that touch
 those surfaces (relative path `../_standards/engineering-way/...` from a SKILL.md), exactly as

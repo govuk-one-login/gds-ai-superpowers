@@ -46,7 +46,7 @@ _(the dev pipeline's three code-level review lenses — review-code / review-sec
 ### Utility
 | Skill | What it does | Reach for it when |
 |-------|--------------|-------------------|
-| `setup` | Install, update, re-link, or verify the library on this machine. Wraps `install.sh` with safety checks and post-install verification. | "set up cadence", "update the skills", "why isn't my skill being discovered". |
+| `setup` | Install, update, re-link, or verify the library on this machine. Wraps `install.sh` with safety checks and post-install verification. | "set up assured-engineering-superpowers", "update the skills", "why isn't my skill being discovered". |
 
 ## Composite skills
 

@@ -1,4 +1,4 @@
-# Authoring skills for cadence
+# Authoring skills for Assured Engineering Superpowers
 
 Conventions for writing and contributing skills. The library lives or dies on
 discipline here — composability only works if each skill has a crisp boundary

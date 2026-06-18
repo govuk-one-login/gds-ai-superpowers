@@ -1,4 +1,4 @@
-# CLAUDE.md — cadence
+# CLAUDE.md — Assured Engineering Superpowers
 
 Context and working conventions for Claude Code sessions in this repo. Read this
 before creating or editing skills.
@@ -68,7 +68,7 @@ CHANGELOG.md               Tracks skill AND standards changes (assurance trail).
 
 Two install paths: `install.sh` (developer/local — links to your live clone, `git
 pull` updates instantly) and the **agent-manager bundle** (`scripts/build-bundle.sh`
-→ `npx @ai-agent-manager/cli@latest https://deloittedigitaluk.github.io/cadence` — a
+→ `npx @ai-agent-manager/cli@latest https://deloittedigitaluk.github.io/assured-engineering-superpowers` — a
 versioned snapshot for consumers/CI; see `docs/onboarding-prompt.md`). Releases are
 automatic: on merge to `main`, `.github/workflows/publish-bundle.yml` derives the next
 semver from the Conventional Commits (`scripts/next-version.sh`; type→bump in

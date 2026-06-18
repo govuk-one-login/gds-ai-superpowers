@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Build an agent-manager bundle from the cadence skills tree.
+# Build an agent-manager bundle from the Assured Engineering Superpowers skills tree.
 #
 #   ./scripts/build-bundle.sh [version]
 #
@@ -11,12 +11,12 @@
 #
 # This is the publishable tree an agent-manager bundle server serves at
 # <base-url>/agents/... . Host-agnostic — CI publishes it to GitHub Pages via
-# .github/workflows/publish-bundle.yml (served at deloittedigitaluk.github.io/cadence),
+# .github/workflows/publish-bundle.yml (served at deloittedigitaluk.github.io/assured-engineering-superpowers),
 # but the same dist/ can be copied to any static host.
 #
 # WHY THE WHOLE TREE IS COPIED. agent-manager discovers skills one level deep
 # (<bundleRoot>/<skill>/SKILL.md) and, on install, symlinks each selected skill
-# dir from its extracted cache into .claude/skills. A cadence skill references
+# dir from its extracted cache into .claude/skills. A skill references
 # ../_standards and ../_templates, so those shared trees must sit beside the
 # skills inside the bundle. We therefore copy skills + _standards + _templates
 # flat at the bundle root — the same intact tree the repo has. This bundle is a
@@ -43,7 +43,7 @@ STAGE="$OUT/bundle"
 rm -rf "$OUT"
 mkdir -p "$STAGE"
 
-echo "Building cadence bundle v$VERSION"
+echo "Building assured-engineering-superpowers bundle v$VERSION"
 
 # 1. Stage the bundle root: every skill dir (one that has a SKILL.md) plus the two
 #    shared trees, all flat at the root.

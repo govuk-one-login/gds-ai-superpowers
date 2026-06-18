@@ -2,9 +2,9 @@
 name: setup
 kind: atomic
 description: >
-  Install, update, re-link, or verify the cadence skill library on
+  Install, update, re-link, or verify the Assured Engineering Superpowers skill library on
   this machine. Use whenever the user says things like "set up
-  cadence", "install the skills", "update the skill library",
+  assured-engineering-superpowers", "install the skills", "update the skill library",
   "re-link my skills", "did my skills install correctly", or asks why a skill
   from this library isn't being discovered. Wraps install.sh with safety checks
   and post-install verification, and explains what it did. Reach for this for
@@ -12,7 +12,7 @@ description: >
   skills inside it).
 ---
 
-# Setup — manage the cadence library
+# Setup — manage the Assured Engineering Superpowers library
 
 This skill manages the library's own installation. It is the friendly, safe
 wrapper around `install.sh` at the repo root. Use it to install, update,

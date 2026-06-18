@@ -2,7 +2,7 @@
 
 > Copy this file to your project at `.claude/standards/INDEX.md` and fill it in.
 > It declares the standards **this project** must adhere to. The
-> cadence skills discover it from the project root and honour it
+> Assured Engineering Superpowers skills discover it from the project root and honour it
 > alongside the library's own (cross-engagement) standards — they never embed a
 > product-specific standard in the library.
 >

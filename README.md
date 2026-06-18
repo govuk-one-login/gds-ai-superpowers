@@ -1,4 +1,4 @@
-# cadence
+# Assured Engineering Superpowers
 
 A library of reusable **skills** for [Claude Code](https://claude.com/claude-code)
 that encode the engineering, security, accessibility, and delivery standards used on
@@ -124,8 +124,8 @@ into your clone — so a `git pull` later updates every skill at once. The point
 alongside any other skills you have; nothing is overwritten.
 
 ```bash
-git clone <your-clone-url> ~/repos/cadence
-cd ~/repos/cadence
+git clone <your-clone-url> ~/repos/assured-engineering-superpowers
+cd ~/repos/assured-engineering-superpowers
 ./install.sh            # installs for all your projects (global)
 ./install.sh --local    # installs only into the current repo's ./.claude/skills
 ```
@@ -144,7 +144,7 @@ the [`@ai-agent-manager/cli`](https://github.com/ai-agent-manager/agent-manager)
 clone needed:
 
 ```bash
-npx -y @ai-agent-manager/cli@latest https://deloittedigitaluk.github.io/cadence
+npx -y @ai-agent-manager/cli@latest https://deloittedigitaluk.github.io/assured-engineering-superpowers
 ```
 
 This installs a versioned snapshot (pick your skills in the prompt, or pin a

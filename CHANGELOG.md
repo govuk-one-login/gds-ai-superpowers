@@ -33,7 +33,7 @@ this is the record of what changed and when, which feeds the assurance trail.
   `.github/workflows/publish-bundle.yml` releases on merge to `main`: it derives the next
   semantic version from the Conventional Commits since the last tag (`scripts/next-version.sh`),
   bumps `VERSION`, rolls this changelog, tags `vX.Y.Z`, and publishes the bundle to the
-  `gh-pages` branch, served at `https://deloittedigitaluk.github.io/cadence`. The reviewed PR
+  `gh-pages` branch, served at `https://deloittedigitaluk.github.io/assured-engineering-superpowers`. The reviewed PR
   merge is the human approval — no manual bump or tag. Versions accumulate (the workflow seeds
   from the already-published branch and regenerates the index across all of them), so pinned
   `bundle-version:` installs keep working. No third-party actions; integrity `.sha256` is served
@@ -43,7 +43,7 @@ this is the record of what changed and when, which feeds the assurance trail.
   current release; it is maintained automatically by the release workflow. `build-bundle.sh`
   orders the index with a semver-aware sort so `0.10.0` ranks above `0.9.0` (the CLI treats the
   last index entry as "latest").
-- Initial release of cadence — a generic, sector-agnostic skill library for Claude Code.
+- Initial release of Assured Engineering Superpowers — a generic, sector-agnostic skill library for Claude Code.
 - Four lifecycle composites: `produce-tech-design` (architect), `prepare-stories` (product),
   `plan-and-implement` (dev), `assure-quality` (QA).
 - 17 atomic skills covering architecture, breakdown, implementation, and QA phases.

@@ -1,12 +1,12 @@
 # Onboarding prompt
 
-After you've cloned the repo (`git clone <repo-url> && cd cadence`),
+After you've cloned the repo (`git clone <repo-url> && cd assured-engineering-superpowers`),
 start Claude Code in the repo and paste the prompt below. It drives the install
 for you and verifies it worked, so you don't run commands by hand.
 
 ---
 
-> Set up the cadence skill library on my machine. Read `install.sh`
+> Set up the Assured Engineering Superpowers skill library on my machine. Read `install.sh`
 > and `README.md` first so you follow the intended setup. Install globally
 > unless I tell you otherwise. It links one symlink per skill into
 > `~/.claude/skills` alongside anything already there — if a skill's name
@@ -21,7 +21,7 @@ for you and verifies it worked, so you don't run commands by hand.
 If the library is already installed and you just want the latest version, paste
 this instead:
 
-> Update the cadence skill library: pull the latest, re-verify the
+> Update the Assured Engineering Superpowers skill library: pull the latest, re-verify the
 > install, and tell me what changed — especially anything under `_standards/`,
 > since that affects security and compliance output.
 
@@ -45,7 +45,7 @@ The clone-and-`install.sh` flow above is the **developer / local** path — link
 point at your live clone, so `git pull` updates everything instantly. It's the
 right path if you're authoring or editing skills.
 
-For **consumers** who just want the skills installed (and for CI), cadence is also
+For **consumers** who just want the skills installed (and for CI), Assured Engineering Superpowers is also
 published as an **agent-manager bundle** (the `@ai-agent-manager/cli` tool, the
 Claude Code plugin-marketplace installer). This installs a **versioned snapshot**
 rather than a live clone.
@@ -53,9 +53,9 @@ rather than a live clone.
 Interactive (pick tools + skills in a TUI):
 
 ```bash
-npx -y @ai-agent-manager/cli@latest https://deloittedigitaluk.github.io/cadence
+npx -y @ai-agent-manager/cli@latest https://deloittedigitaluk.github.io/assured-engineering-superpowers
 # choose Claude Code, a scope (system → ~/.claude/skills, or repo → ./.claude/skills),
-# and the cadence skills you want.
+# and the Assured Engineering Superpowers skills you want.
 ```
 
 Headless / CI (pin a version, list skills) — create `ai-skills.yml`:
@@ -71,7 +71,7 @@ skills:
 ```
 
 ```bash
-npx -y @ai-agent-manager/cli@latest https://deloittedigitaluk.github.io/cadence --config ai-skills.yml
+npx -y @ai-agent-manager/cli@latest https://deloittedigitaluk.github.io/assured-engineering-superpowers --config ai-skills.yml
 ```
 
 Either way, agent-manager downloads the bundle, caches it under
@@ -88,7 +88,7 @@ directory. Because the bundle ships the whole tree intact, every skill's shared
   is the assurance trail for bundle consumers).
 - **macOS / Linux only, in practice.** agent-manager installs by symlink; on
   Windows it falls back to *copying* a skill's folder, which orphans the shared
-  `_standards/`/`_templates/` trees and breaks cadence's references. Windows users
+  `_standards/`/`_templates/` trees and breaks the library's references. Windows users
   need developer-mode/admin symlinks, or should use the clone + `install.sh` path.
 - **Releases are automatic** (maintainers): there's no manual version bump or tag.
   When a PR merges to `main`, the `Release & publish bundle` workflow
@@ -96,7 +96,7 @@ directory. Because the bundle ships the whole tree intact, every skill's shared
   from the Conventional Commits since the last release tag
   (`scripts/next-version.sh` — see the type→bump table in `COMMIT_STANDARD.md`),
   bumps `VERSION`, rolls `CHANGELOG.md`, tags `vX.Y.Z`, and publishes the bundle to the
-  `gh-pages` branch (served by GitHub Pages at `https://deloittedigitaluk.github.io/cadence`).
+  `gh-pages` branch (served by GitHub Pages at `https://deloittedigitaluk.github.io/assured-engineering-superpowers`).
   Versions accumulate, so pinned `bundle-version:` installs keep working. **The reviewed
   PR merge is the approval** — commit types you already wrote drive the version, so label
   them correctly (a `feat:` → minor, `fix:` → patch, `BREAKING CHANGE:` → major; a
