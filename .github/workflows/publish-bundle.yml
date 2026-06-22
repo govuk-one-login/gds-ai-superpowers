@@ -1,17 +1,18 @@
-name: Release & publish bundle
+name: Publish bundle to GitHub Pages
 
-# Release-on-merge. When something lands on `main`, derive the next semantic version
-# from the Conventional Commits since the last release tag (scripts/next-version.sh),
-# bump VERSION + roll CHANGELOG, tag it, build the agent-manager bundle, and publish it
-# to the `gh-pages` branch (served by GitHub Pages at
-# https://<owner>.github.io/<repo>/agents/...). The reviewed PR merge is the human
-# approval; the version is a deterministic consequence of the commit types.
+# On merge to `main`, build the agent-manager bundle and publish it to the `gh-pages`
+# branch, which GitHub Pages serves at https://<owner>.github.io/<repo>/agents/... — so
+# the library installs with:
+#   npx @ai-agent-manager/cli@latest https://govuk-one-login.github.io/gds-ai-superpowers
 #
-# Versions ACCUMULATE on gh-pages (the build seeds from what's already published and
-# regenerates the index across all of them), so pinned `bundle-version:` installs keep
-# working.
+# The published version is whatever the VERSION file says. Bump VERSION in a normal PR
+# to publish a new version; otherwise each merge republishes the current one. Versions
+# ACCUMULATE on gh-pages (the build seeds from what's already published and regenerates
+# the index across all of them), so pinned `bundle-version:` installs keep working.
 #
-# No third-party actions — only actions/checkout and the built-in token.
+# IMPORTANT: this workflow writes ONLY to the `gh-pages` branch — never to `main`. `main`
+# is PR-only with required signatures, so CI must not push commits or tags to it. Only the
+# first-party actions/checkout action is used.
 
 on:
   push:
@@ -19,25 +20,21 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: write  # used only to push the gh-pages branch
 
 concurrency:
-  group: release-publish
+  group: publish-bundle
   cancel-in-progress: false
 
 jobs:
-  release:
+  publish:
     runs-on: ubuntu-latest
-    # Don't re-trigger on our own release commit (avoids an infinite loop).
-    if: ${{ !startsWith(github.event.head_commit.message, 'chore(release):') }}
     steps:
-      - name: Check out source (full history + tags)
+      - name: Check out source
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # next-version.sh needs tags + full log
 
-      # Bring the already-published bundle (all prior versions) into ./published.
-      # First-ever run has no gh-pages branch yet — tolerate that.
+      # Bring the already-published bundle (all prior versions) into ./published so the
+      # rebuilt index lists old + new. First-ever run has no gh-pages branch yet — tolerate it.
       - name: Check out existing gh-pages (prior versions)
         uses: actions/checkout@v4
         continue-on-error: true
@@ -45,56 +42,7 @@ jobs:
           ref: gh-pages
           path: published
 
-      - name: Compute next version
-        id: ver
-        run: |
-          set -euo pipefail
-          version="$(./scripts/next-version.sh)"
-          echo "version=$version" >> "$GITHUB_OUTPUT"
-          if [ "$version" = "none" ]; then
-            echo "No release-worthy commits since the last tag — nothing to publish."
-          else
-            echo "Releasing version: $version"
-          fi
-
-      - name: Bump VERSION + roll CHANGELOG
-        if: ${{ steps.ver.outputs.version != 'none' }}
-        env:
-          VERSION: ${{ steps.ver.outputs.version }}
-        run: |
-          set -euo pipefail
-          printf '%s\n' "$VERSION" > VERSION
-          today="$(date -u +%Y-%m-%d)"
-          # keep-a-changelog roll: insert a fresh version header just below the
-          # [Unreleased] heading, so the accumulated entries fall under [VERSION]
-          # and an empty [Unreleased] stays on top for the next cycle.
-          awk -v ver="$VERSION" -v day="$today" '
-            !done && /^## \[Unreleased\]/ {
-              print; print ""; print "## [" ver "] - " day; done=1; next
-            } { print }
-          ' CHANGELOG.md > CHANGELOG.md.tmp && mv CHANGELOG.md.tmp CHANGELOG.md
-          echo "Set VERSION=$VERSION and rolled CHANGELOG"
-
-      - name: Commit + tag the release
-        if: ${{ steps.ver.outputs.version != 'none' }}
-        env:
-          VERSION: ${{ steps.ver.outputs.version }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          set -euo pipefail
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add VERSION CHANGELOG.md
-          git commit -m "chore(release): v${VERSION}"
-          git tag "v${VERSION}"
-          remote="https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-          git push "$remote" HEAD:main
-          git push "$remote" "v${VERSION}"
-
-      # Seed dist/ with every previously published version so the index, regenerated
-      # by build-bundle.sh, lists old + new.
       - name: Seed prior versions into dist/
-        if: ${{ steps.ver.outputs.version != 'none' }}
         run: |
           set -euo pipefail
           mkdir -p dist/agents
@@ -103,27 +51,25 @@ jobs:
             rm -f dist/agents/index.json
           fi
 
-      - name: Build bundle
-        if: ${{ steps.ver.outputs.version != 'none' }}
-        run: ./scripts/build-bundle.sh "${{ steps.ver.outputs.version }}"
+      - name: Build bundle (version from the VERSION file)
+        run: ./scripts/build-bundle.sh
 
       - name: Disable Jekyll
-        if: ${{ steps.ver.outputs.version != 'none' }}
         run: touch dist/.nojekyll
 
       - name: Publish to gh-pages
-        if: ${{ steps.ver.outputs.version != 'none' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
+          version="$(cat VERSION)"
           cd dist
           git init -q
           git checkout -q -b gh-pages
           git add -A
           git -c user.name='github-actions[bot]' \
               -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
-              commit -q -m "Publish bundle v${{ steps.ver.outputs.version }}"
+              commit -q -m "Publish bundle (VERSION ${version})"
           git push -f \
             "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" \
             gh-pages
