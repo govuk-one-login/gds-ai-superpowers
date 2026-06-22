@@ -131,7 +131,7 @@ The dev sequence ships end to end: generate-acceptance-tests → generate-implem
 implement-plan → review-code → review-security → review-accessibility → reviewed branch. The
 three code-level review lenses (general / security / accessibility) are all built and wired;
 the two specialised ones are risk-tiered. No code-level review slots remain. (The remaining
-named follow-on is the **machine shared-module API-compat gate**, `ENG-API-1`, which
+named follow-on is the **machine shared-module API-compat gate**, `GDSW-API-1`, which
 `generate-implementation-plan` already routes to the TD process; building it as a discrete
 gate is a separate increment.) The running-UI / AT accessibility verification is the QA-phase
 `accessibility-at-testing` slot, which consumes this pipeline's deferred-to-AT list.

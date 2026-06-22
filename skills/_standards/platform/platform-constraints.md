@@ -14,7 +14,7 @@ the change alters it**.
 
 ## House identifiers — `PLAT-*` (categories here; values are the project's)
 
-Like the `ENG-*` scheme, these IDs are **authored by this library** — so we own
+Like the `GDSW-*` scheme, these IDs are **authored by this library** — so we own
 their stability (don't renumber casually; retire rather than reuse). But unlike a security
 framework, the library cannot enumerate the *values*: the approved regions, the approved-
 services list, the quotas, the egress rules, the tenancy model are **programme-specific**.
@@ -39,7 +39,7 @@ cited, not re-verified. **But when the design introduces or changes a platform c
 (a new CI/CD pipeline, a new cloud account, a new cloud service) — surfaced by `PLAT-6` —
 that **new** surface is now in scope, and `check-platform-constraints` runs a security-
 baseline pass on it, **routing to existing controls** (NCSC Cloud Principles, OWASP
-**A03:2025**/**A08:2025**, engineering-way `ENG-OPS-*`/`ENG-SCM-*`). It mints no new security
+**A03:2025**/**A08:2025**, GDS Way `GDSW-OPS-*`/`GDSW-SCM-*`). It mints no new security
 content — it cites those. This is exactly the "in scope only if the change modifies them"
 carve-out the security skills defer.
 
@@ -103,4 +103,4 @@ carve-out the security skills defer.
 
 Source: house convention (this library). The constraint **values** are project-declared in
 `.claude/standards/` (`platform-baseline.md`). Security cross-references point to the
-existing `security/` and `engineering-way/` lenses; nothing is restated here.
+existing `security/` and `gds-way/` lenses; nothing is restated here.

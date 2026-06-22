@@ -36,7 +36,7 @@ sent to an external service.
 ## Where this sits among the security skills (two altitudes, the boundary)
 
 The security standard is consumed at two altitudes by two skills — exactly as the
-engineering-way standard is (check-engineering-standards at TD, review-code at code):
+GDS Way standard is (check-engineering-standards at TD, review-code at code):
 
 - **`check-security-standards` = TD level.** Does the *design* name the right controls? A
   conformance pass over the Security Considerations checklist.

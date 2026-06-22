@@ -7,6 +7,12 @@ this is the record of what changed and when, which feeds the assurance trail.
 ## [Unreleased]
 
 ### Changed
+- **GDS fork — re-applied the GDS layer.** Replaced the genericised `engineering-way` (ENG-*)
+  engineering standard with the **GDS Way** (`_standards/gds-way/`, GDSW-* controls, grounded in
+  gds-way.cabinet-office.gov.uk), restored the GOV.UK Service Standard examples in
+  `project-standards-template`, and rebranded to **GDS AI Superpowers** (Pages URL →
+  `govuk-one-login.github.io/gds-ai-superpowers`). This is a fork of
+  `DeloitteDigitalUK/assured-engineering-superpowers` (MIT; upstream copyright preserved in `LICENSE`).
 - **Flattened the skill layout** from `skills/atomic|composite/<name>/` to a single-level
   `skills/<name>/`, to match the Claude Code plugin-marketplace layout that external skill
   installers (e.g. the `@ai-agent-manager/cli` agent-manager) discover. The atomic-vs-composite
@@ -33,7 +39,7 @@ this is the record of what changed and when, which feeds the assurance trail.
   `.github/workflows/publish-bundle.yml` releases on merge to `main`: it derives the next
   semantic version from the Conventional Commits since the last tag (`scripts/next-version.sh`),
   bumps `VERSION`, rolls this changelog, tags `vX.Y.Z`, and publishes the bundle to the
-  `gh-pages` branch, served at `https://deloittedigitaluk.github.io/assured-engineering-superpowers`. The reviewed PR
+  `gh-pages` branch, served at `https://govuk-one-login.github.io/gds-ai-superpowers`. The reviewed PR
   merge is the human approval — no manual bump or tag. Versions accumulate (the workflow seeds
   from the already-published branch and regenerates the index across all of them), so pinned
   `bundle-version:` installs keep working. No third-party actions; integrity `.sha256` is served
@@ -43,16 +49,16 @@ this is the record of what changed and when, which feeds the assurance trail.
   current release; it is maintained automatically by the release workflow. `build-bundle.sh`
   orders the index with a semver-aware sort so `0.10.0` ranks above `0.9.0` (the CLI treats the
   last index entry as "latest").
-- Initial release of Assured Engineering Superpowers — a generic, sector-agnostic skill library for Claude Code.
+- Initial release of GDS AI Superpowers — a skill library for Claude Code.
 - Four lifecycle composites: `produce-tech-design` (architect), `prepare-stories` (product),
   `plan-and-implement` (dev), `assure-quality` (QA).
 - 17 atomic skills covering architecture, breakdown, implementation, and QA phases.
 - Four `_standards/` domains: security (OWASP Top 10:2025 / MASVS v2 / NCSC),
-  accessibility (WCAG 2.2 AA + iOS/Android lenses), engineering-way (ENG-* house IDs),
+  accessibility (WCAG 2.2 AA + iOS/Android lenses), GDS Way (GDSW-* house IDs),
   and platform (PLAT-* house IDs).
 - Risk-tiering in `produce-tech-design` (threat-model and cross-model-review gated on
   accepted human decision).
 - Three code-level review lenses in `plan-and-implement`: general (review-code), security
   (review-security), accessibility (review-accessibility), all risk-tiered.
-- Deep-tier standard files for on-demand control depth (security ×17, engineering-way ×3,
+- Deep-tier standard files for on-demand control depth (security ×17, GDS Way ×3,
   accessibility ×5).

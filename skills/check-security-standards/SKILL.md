@@ -31,7 +31,7 @@ decision).
 > **TD-level.** This is the design-altitude security skill. The **code-level realisation**
 > — does the implemented diff actually meet these controls, and introduce no new vuln — is
 > `review-security` in the dev pipeline (the security standard is consumed at two altitudes,
-> exactly as the engineering-way standard is by check-engineering-standards + review-code).
+> exactly as the GDS Way standard is by check-engineering-standards + review-code).
 
 ## The boundary vs `threat-model` (read this — it keeps the two skills distinct)
 

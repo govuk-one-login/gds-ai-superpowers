@@ -72,8 +72,8 @@ flowchart TD
 |---|------|------|------------------------|
 | 1 | `frame-design` | **Conditional** | Skip if a framed TD already exists (record the skip). Else: framed TD — scope, NFRs, assumptions, standards, direction. External web research is consent-gated. |
 | 2 | `generate-design-doc` | Mandatory | Architecture + **public** API contracts, grounded in real code. Presents an **Approach & key decisions** pre-flight for sign-off before the full draft. |
-| 3 | `check-engineering-standards` | Mandatory | Engineering-way commitments (ENG-*). |
-| 4 | `check-platform-constraints` | Mandatory (fit) + **conditional** (security) | Verifies the design **fits** the platform's declared constraints (residency, approved services, tenancy, quotas, egress). **Only if** the design introduces/changes a platform component, also security-checks that new surface (cites NCSC CP / A03 / A08 / ENG-OPS/SCM). |
+| 3 | `check-engineering-standards` | Mandatory | GDS Way commitments (GDSW-*). |
+| 4 | `check-platform-constraints` | Mandatory (fit) + **conditional** (security) | Verifies the design **fits** the platform's declared constraints (residency, approved services, tenancy, quotas, egress). **Only if** the design introduces/changes a platform component, also security-checks that new surface (cites NCSC CP / A03 / A08 / GDSW-OPS/SCM). |
 | 5 | `check-security-standards` | Mandatory | Security checklist + a **proposed** sizing (you accept it, not the skill). The accepted sizing gates step 6. |
 | 6 | `threat-model` | **Conditional** (on sizing) | **None/Minor** → record Threat Modeling row as "Not Required" (owner + reason), no STRIDE walk. **Moderate/Major** → run in full: STRIDE register, flips the row, lists open risk decisions. |
 | 7 | `cross-model-review` | **Default-on, skippable** | Independent fresh-context critique (runs locally), walked back into the TD. A human may skip a low-risk TD with a recorded reason. |
