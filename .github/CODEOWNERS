@@ -1,0 +1,7 @@
+# Code owners for govuk-one-login/gds-ai-superpowers
+# https://docs.github.com/articles/about-code-owners
+#
+# The mobile-ai-coding team owns everything in this repo by default. Listed last
+# so it applies to any path not matched by a more specific rule above.
+
+*       @govuk-one-login/mobile-ai-coding
