@@ -302,4 +302,4 @@ Changes under `_standards/` carry extra weight — note the *why* in the commit 
 
 ## License
 
-Released under the [MIT License](LICENSE) © DeloitteDigitalUK.
+Released under the [MIT License](LICENSE).
