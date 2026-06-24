@@ -46,29 +46,38 @@
 ## Stories
 
 > Each block is in Jira's field shape — copy field by field and ensure that stories are in plain English. The summary uses the
-> format "Skillset | Description", where skillset is one of: iOS, Android, Web, Platform.
+> format "Skillset | Description", where skillset is one of: iOS, Android, Web, Platform, Backend.
 > Context and acceptance criteria stay at architecture and observable-behaviour level;
 > nothing here prescribes the code inside a component.
+> Stories should be in plain English, and ready to be picked up by a developer
 
 ### S1 — [Skillset | Short description]
 
-- **Issue type:** Story
-- **Epic link:** C1 — [capability name]
-- **Summary:** [Skillset] | [Short, specific description — for example, "Valid passport question page" or "Error screen for issues with passport photo"]
-- **Context:**
+**Issue type:** Story
+
+**Epic link:** C1 — [capability name]
+
+**Summary:** [Skillset] | [Short, specific description — for example, "Valid passport question page" or "Error screen for issues with passport photo"]
+
+**Context:**
     [One or two sentences of business or technical context explaining why this work is needed and how it fits into the wider service.]
 
+**User story:**
     As a [role], I want to [action] so that [benefit].
 
-    Grounds in (architecture and contract level — not internal code):
+    [User stories should be functional, and omit technical details]
+    
+**Requirements:**
+    [Grounds in (architecture and contract level — not internal code)]
     - Component: [reused | extended | new module named in the TD]
-    - Contract: [endpoint or message from the TD's API table — omit if not applicable]
-- **Requirements:**
+    - Contract: [endpoint or message from the TD's API table — omit if not applicable] 
     - [Functional or technical requirement]
     - [Error handling — as described in the technical design]
     - [Content change, if applicable]
-- **Benefit:** [Why this ticket is being done and what completing it achieves for the user or service.]
-- **Acceptance criteria:**
+
+**Benefit:** [Why this ticket is being done and what completing it achieves for the user or service.]
+
+**Acceptance criteria:**
     Scenario: [scenario name]
     - Given [context]
     - When [action]
@@ -80,13 +89,14 @@
     - Then [observable outcome]
 
     Include scenarios for relevant non-functional requirements — for example, accessibility, analytics, and monitoring and alerting. Keep each line to a single condition; do not use 'or'.
-- **Developer notes:** [Relevant technical notes for developers. Leave blank for developers to fill in during amigos.]
-- **Important links:**
+
+**Important links:**
     - [Solution or service design - leave blank if not avaialble]
     - [Technical design]
-- **Key people:** Leave blank — to be filled in.
-- **Labels:** req:R1, req:R2, td:[component-or-API-row]
-- **Size / notes:** [Small and testable — mark L and propose a split if it bundles a new module, a new contract and error or timeout handling; note any steps folded in or any reuse from another capability]
+
+**Labels:** req:R1, req:R2, td:[component-or-API-row]
+
+**Size / notes:** [Small and testable — mark L and propose a split if it bundles a new module, a new contract and error or timeout handling; note any steps folded in or any reuse from another capability]
 
 ### S2 — [Skillset | Short description]
 [repeat per story, grouped under its capability]
