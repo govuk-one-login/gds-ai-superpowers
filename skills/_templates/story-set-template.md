@@ -23,8 +23,8 @@
 
 | Story | Title | Epic (capability) | Requirement(s) | Size | Jira key |
 |-------|-------|-------------------|----------------|------|----------|
-| S1    | [title] | C1 — [capability] | R1, R2 | S | |
-| S2    | [title] | C1 — [capability] | R3 | M (split?) | |
+| S1    | iOS \| [description] | C1 — [capability] | R1, R2 | S | |
+| S2    | Web \| [description] | C1 — [capability] | R3 | M (split?) | |
 | …     |  |  |  |  | |
 
 ## Capability map (Epics)
@@ -45,35 +45,67 @@
 
 ## Stories
 
-> Each block is in Jira's field shape — copy field by field. "Grounds in" and the
-> acceptance criteria stay at architecture/contract and observable-behaviour level;
+> Each block is in Jira's field shape — copy field by field and ensure that stories are in plain English. The summary uses the
+> format "Skillset | Description", where skillset is one of: iOS, Android, Web, Platform, Backend.
+> Context and acceptance criteria stay at architecture and observable-behaviour level;
 > nothing here prescribes the code inside a component.
+> Stories should be in plain English, and ready to be picked up by a developer
 
-### S1 — [short title]
+### S1 — [Skillset | Short description]
 
-- **Issue type:** Story
-- **Epic Link:** C1 — [capability name]
-- **Summary:** [short title]
-- **Description:**
-    As a [role], I want [capability], so that [benefit].
+**Issue type:** Story
 
-    Grounds in (architecture/contract level — never internal code):
+**Epic link:** C1 — [capability name]
+
+**Summary:** [Skillset] | [Short, specific description — for example, "Valid passport question page" or "Error screen for issues with passport photo"]
+
+**Context:**
+    [One or two sentences of business or technical context explaining why this work is needed and how it fits into the wider service.]
+
+**User story:**
+    As a [role], I want to [action] so that [benefit].
+
+    [User stories should be functional, and omit technical details]
+    
+**Requirements:**
+    [Grounds in (architecture and contract level — not internal code)]
     - Component: [reused | extended | new module named in the TD]
-    - Contract: [endpoint/message from the TD's API table — omit if API is N/A]
-- **Acceptance criteria:**
-    - Given [context], when [action], then [observable outcome].
-    - Given [edge/error context], when [action], then [observable outcome].
-- **Labels:** req:R1, req:R2, td:[component-or-API-row]
-- **Size / notes:** [Small + Testable check; mark **L and propose a split** if it bundles a new module + a new contract + error/timeout handling; note any steps folded in or any reuse from another capability]
+    - Contract: [endpoint or message from the TD's API table — omit if not applicable] 
+    - [Functional or technical requirement]
+    - [Error handling — as described in the technical design]
+    - [Content change, if applicable]
 
-### S2 — [short title]
+**Benefit:** [Why this ticket is being done and what completing it achieves for the user or service.]
+
+**Acceptance criteria:**
+    Scenario: [scenario name]
+    - Given [context]
+    - When [action]
+    - Then [observable outcome]
+
+    Scenario: [edge or error case]
+    - Given [context]
+    - When [action]
+    - Then [observable outcome]
+
+    Include scenarios for relevant non-functional requirements — for example, accessibility, analytics, and monitoring and alerting. Keep each line to a single condition; do not use 'or'.
+
+**Important links:**
+    - [Solution or service design - leave blank if not avaialble]
+    - [Technical design]
+
+**Labels:** req:R1, req:R2, td:[component-or-API-row]
+
+**Size / notes:** [Small and testable — mark L and propose a split if it bundles a new module, a new contract and error or timeout handling; note any steps folded in or any reuse from another capability]
+
+### S2 — [Skillset | Short description]
 [repeat per story, grouped under its capability]
 
 ## Coverage matrix
 
 > Proof that nothing was dropped and nothing was invented. Every requirement maps to
-> ≥1 story; every story traces to a requirement **and** a TD element ("TD element" =
-> any named component, infra/mobile module, or API-table row).
+> at least one story; every story traces to a requirement **and** a TD element ("TD element" =
+> any named component, infrastructure or mobile module, or API-table row).
 
 **Requirement → stories** (show reuse explicitly: "S3 (C1), reused in C2")
 
@@ -91,7 +123,7 @@
 | S1 | R1, R2 | [component / API row] | Traced |
 | S4 | — | — | **ORPHAN — traces to nothing; raised as finding below** |
 
-## Proposed design updates & decisions (write-back to the TD)
+## Proposed design updates and decisions (write-back to the TD)
 
 > The gstack spine: each gap, contradiction, or orphan found while slicing, walked
 > back into the source TD one at a time, with the human's disposition. The skill
@@ -102,8 +134,8 @@
 
 | Finding | Source TD field / section | Proposed change | Disposition | Owner | Date |
 |---------|---------------------------|-----------------|-------------|-------|------|
-| [e.g. R3 uncovered] | [e.g. Assumptions & open questions] | [e.g. add `[gap]` — no component delivers R3; needs an architecture decision] | Accepted / Modified / Rejected / Deferred | [name] | [date] |
-| [e.g. S4 ungrounded] | [e.g. Architecture] | [e.g. confirm/deny the component S4 assumes] | … | [name] | [date] |
+| [for example, R3 uncovered] | [for example, Assumptions and open questions] | [for example, add `[gap]` — no component delivers R3; needs an architecture decision] | Accepted / Modified / Rejected / Deferred | [name] | [date] |
+| [for example, S4 ungrounded] | [for example, Architecture] | [for example, confirm or deny the component S4 assumes] | … | [name] | [date] |
 
 ## Open items at handoff
 
