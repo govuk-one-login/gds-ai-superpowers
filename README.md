@@ -1,6 +1,6 @@
-# GDS AI Superpowers
+# GDS AI Superpowers - Proof of Concept
 
-A library of reusable **skills** for [Claude Code](https://claude.com/claude-code)
+A Proof-of-Concept demo library of reusable **skills** for [Claude Code](https://claude.com/claude-code)
 that encode the engineering, security, accessibility, and delivery standards used on
 UK government (GDS / GOV.UK) digital work. Think of each skill as an experienced
 practitioner you can summon by name — a security architect, an accessibility
