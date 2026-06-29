@@ -21,19 +21,20 @@
 # skills inside the bundle. We therefore copy skills + _standards + _templates
 # flat at the bundle root — the same intact tree the repo has. This bundle is a
 # GENERATED distribution artifact; the repo stays the single source of truth, and
-# nothing here is hand-maintained. A standards change ⇒ bump VERSION ⇒ rebuild.
+# nothing here is hand-maintained. A standards change ⇒ a release tag ⇒ rebuild.
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SKILLS_SRC="$REPO_ROOT/skills"
 
-# Version: explicit arg wins, else the VERSION file.
+# Version: explicit arg wins, else derive it from the git tags (Conventional Commits).
+# There is no VERSION file — the release tags are the source of truth.
 VERSION="${1:-}"
-if [[ -z "$VERSION" && -f "$REPO_ROOT/VERSION" ]]; then
-  VERSION="$(tr -d '[:space:]' < "$REPO_ROOT/VERSION")"
-fi
 if [[ -z "$VERSION" ]]; then
-  echo "ERROR: no version. Pass one as an argument or create a VERSION file." >&2
+  VERSION="$("$REPO_ROOT/scripts/next-version.sh")"
+fi
+if [[ -z "$VERSION" || "$VERSION" == "none" ]]; then
+  echo "ERROR: no version. Pass one as an argument (no release-worthy commits to derive one)." >&2
   exit 1
 fi
 

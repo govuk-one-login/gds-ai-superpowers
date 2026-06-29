@@ -1,17 +1,20 @@
-name: Release & publish bundle
+name: Publish bundle to GitHub Pages
 
-# Release-on-merge. When something lands on `main`, derive the next semantic version
-# from the Conventional Commits since the last release tag (scripts/next-version.sh),
-# bump VERSION + roll CHANGELOG, tag it, build the agent-manager bundle, and publish it
+# On merge to `main`, derive the next semantic version from the Conventional Commits since
+# the last release tag (scripts/next-version.sh), tag it as a GitHub Release (which renders
+# changelog notes from the reviewed commits), build the agent-manager bundle, and publish it
 # to the `gh-pages` branch (served by GitHub Pages at
-# https://<owner>.github.io/<repo>/agents/...). The reviewed PR merge is the human
-# approval; the version is a deterministic consequence of the commit types.
+# https://<owner>.github.io/<repo>/agents/...). The reviewed PR merge is the human approval;
+# the version is a deterministic consequence of the commit types.
 #
 # Versions ACCUMULATE on gh-pages (the build seeds from what's already published and
 # regenerates the index across all of them), so pinned `bundle-version:` installs keep
 # working.
 #
-# No third-party actions — only actions/checkout and the built-in token.
+# IMPORTANT: this workflow writes ONLY to the `gh-pages` branch and to tags/releases — never
+# to `main`. `main` is PR-only with required signatures (the `Main-Protection` ruleset), so
+# CI must not push commits to it. Tags are not ruleset-protected, so the release tag is the
+# durable record of the version. Only first-party actions (actions/checkout, gh CLI) are used.
 
 on:
   push:
@@ -19,17 +22,15 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: write  # used to create the release/tag and push the gh-pages branch
 
 concurrency:
-  group: release-publish
+  group: publish-bundle
   cancel-in-progress: false
 
 jobs:
-  release:
+  publish:
     runs-on: ubuntu-latest
-    # Don't re-trigger on our own release commit (avoids an infinite loop).
-    if: ${{ !startsWith(github.event.head_commit.message, 'chore(release):') }}
     steps:
       - name: Check out source (full history + tags)
         uses: actions/checkout@v4
@@ -57,39 +58,20 @@ jobs:
             echo "Releasing version: $version"
           fi
 
-      - name: Bump VERSION + roll CHANGELOG
+      # Tag the release and let GitHub render the changelog from the reviewed commits.
+      # This creates the vX.Y.Z tag too (tags are not ruleset-protected) — nothing is
+      # pushed to `main`.
+      - name: Tag the release (with generated notes)
         if: ${{ steps.ver.outputs.version != 'none' }}
         env:
           VERSION: ${{ steps.ver.outputs.version }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          printf '%s\n' "$VERSION" > VERSION
-          today="$(date -u +%Y-%m-%d)"
-          # keep-a-changelog roll: insert a fresh version header just below the
-          # [Unreleased] heading, so the accumulated entries fall under [VERSION]
-          # and an empty [Unreleased] stays on top for the next cycle.
-          awk -v ver="$VERSION" -v day="$today" '
-            !done && /^## \[Unreleased\]/ {
-              print; print ""; print "## [" ver "] - " day; done=1; next
-            } { print }
-          ' CHANGELOG.md > CHANGELOG.md.tmp && mv CHANGELOG.md.tmp CHANGELOG.md
-          echo "Set VERSION=$VERSION and rolled CHANGELOG"
-
-      - name: Commit + tag the release
-        if: ${{ steps.ver.outputs.version != 'none' }}
-        env:
-          VERSION: ${{ steps.ver.outputs.version }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          set -euo pipefail
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add VERSION CHANGELOG.md
-          git commit -m "chore(release): v${VERSION}"
-          git tag "v${VERSION}"
-          remote="https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-          git push "$remote" HEAD:main
-          git push "$remote" "v${VERSION}"
+          gh release create "v${VERSION}" \
+            --target "${GITHUB_SHA}" \
+            --title "v${VERSION}" \
+            --generate-notes
 
       # Seed dist/ with every previously published version so the index, regenerated
       # by build-bundle.sh, lists old + new.

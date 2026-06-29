@@ -68,8 +68,9 @@ overlapping triggers, so:
 ## Before you merge
 
 1. Add a one-line entry to `skills/INDEX.md`.
-2. Note the change in `CHANGELOG.md` — and if you touched `_standards/`, say
-   what changed and why (assurance trail).
+2. Write a clear Conventional Commit (see `COMMIT_STANDARD.md`) — its type drives the
+   version bump and its body is the assurance trail. If you touched `_standards/`, say
+   what changed and why in the body.
 3. **Validate against real, already-approved work.** Take three or four
    completed, signed-off artifacts, feed the skill the same input the human had,
    and compare. The misses are the iteration backlog. A skill that hasn't been
