@@ -172,8 +172,8 @@ forcing a fresh pass.
 
 This pipeline ships the **complete** architect sequence: **frame-design →
 generate-design-doc → check-engineering-standards → check-platform-constraints →
-check-security-standards → threat-model → cross-model-review**. No named slots remain
-(see CHANGELOG). The order is fixed; the baseline (steps
+check-security-standards → threat-model → cross-model-review**. No named slots remain.
+The order is fixed; the baseline (steps
 1-5) always runs, and the two heavy steps (threat-model, cross-model-review) are
 **risk-tiered** — gated on a recorded human decision, never a silent skip (see
 "Risk-tiering"). Any future atomic slots in by phase.

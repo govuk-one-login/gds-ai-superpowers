@@ -84,29 +84,32 @@ directory. Because the bundle ships the whole tree intact, every skill's shared
 - **It's a snapshot, not a live clone.** Updates don't arrive via `git pull` — you
   re-run with `--update` to pull a newer published version. A standards change is
   only picked up once a new bundle version is published (see
-  `scripts/build-bundle.sh` and `CHANGELOG.md` — version-bump-on-standards-change
-  is the assurance trail for bundle consumers).
+  `scripts/build-bundle.sh`; the release tags + their generated notes are the
+  version-bump-on-standards-change assurance trail for bundle consumers).
 - **macOS / Linux only, in practice.** agent-manager installs by symlink; on
   Windows it falls back to *copying* a skill's folder, which orphans the shared
   `_standards/`/`_templates/` trees and breaks the library's references. Windows users
   need developer-mode/admin symlinks, or should use the clone + `install.sh` path.
 - **Releases are automatic** (maintainers): there's no manual version bump or tag.
-  When a PR merges to `main`, the `Release & publish bundle` workflow
+  When a PR merges to `main`, the `Publish bundle to GitHub Pages` workflow
   (`.github/workflows/publish-bundle.yml`) derives the next [semantic version](https://semver.org)
   from the Conventional Commits since the last release tag
   (`scripts/next-version.sh` — see the type→bump table in `COMMIT_STANDARD.md`),
-  bumps `VERSION`, rolls `CHANGELOG.md`, tags `vX.Y.Z`, and publishes the bundle to the
-  `gh-pages` branch (served by GitHub Pages at `https://govuk-one-login.github.io/gds-ai-superpowers`).
-  Versions accumulate, so pinned `bundle-version:` installs keep working. **The reviewed
-  PR merge is the approval** — commit types you already wrote drive the version, so label
-  them correctly (a `feat:` → minor, `fix:` → patch, `BREAKING CHANGE:` → major; a
-  docs/chore-only merge publishes nothing).
+  creates a `vX.Y.Z` GitHub Release with auto-generated notes (the tag is the version
+  record) and the built bundle attached as Release **assets** (the version archive), then
+  renders the site to GitHub Pages via the official Actions deployment (served at
+  `https://govuk-one-login.github.io/gds-ai-superpowers`). The workflow writes **only** to
+  tags/Releases and the `github-pages` environment — never to `main`, and there is **no
+  `gh-pages` branch**, so nothing a write-access dev could overwrite serves the bundle.
+  Versions accumulate as Release assets (each deploy reconstructs the full site from the
+  Releases), so pinned `bundle-version:` installs keep working. **The reviewed PR merge is
+  the approval** — commit types you already wrote drive the version, so label them correctly
+  (a `feat:` → minor, `fix:` → patch, `BREAKING CHANGE:` → major; a docs/chore-only merge
+  publishes nothing).
 
-  **One-time setup:** the repo must be **public**, and Pages must be enabled —
-  Settings → Pages → Source: *Deploy from a branch* → `gh-pages` / root. The `.sha256`
-  sidecar the build emits gives consumers real integrity verification on Pages. To build
+  **One-time setup:** the repo must be **public**; set Pages to deploy from the workflow —
+  Settings → Pages → Source: **GitHub Actions** (not "Deploy from a branch"); and protect
+  the `github-pages` environment (Settings → Environments → `github-pages`) with a
+  deployment branch rule of `main` only, so only a reviewed `main` merge can publish. The
+  `.sha256` sidecar the build emits gives consumers real integrity verification on Pages. To build
   the `dist/agents/` tree locally without publishing, just run `./scripts/build-bundle.sh`.
-
-  **If you later protect `main`** (require PRs): the workflow pushes its `chore(release):`
-  commit + tag back to `main`, so grant the release workflow bypass, or move to a
-  release-PR model — otherwise the push-back is rejected.

@@ -62,9 +62,11 @@ docs/
 └── onboarding-prompt.md   Paste-in prompts for install/update.
 install.sh                 Developer/local install: one flat symlink per skill into .claude/skills.
 scripts/build-bundle.sh    Builds the agent-manager bundle (dist/agents/, gitignored) for consumer/CI install.
-VERSION                    Library version; drives the bundle version (bump on a standards change).
-CHANGELOG.md               Tracks skill AND standards changes (assurance trail).
 ```
+
+The library version lives in the **git release tags** (`vX.Y.Z`), not a checked-in file —
+there is no `VERSION` or `CHANGELOG.md`. The release history (tags + their auto-generated
+GitHub Release notes, derived from the Conventional Commits) is the assurance trail.
 
 Two install paths: `install.sh` (developer/local — links to your live clone, `git
 pull` updates instantly) and the **agent-manager bundle** (`scripts/build-bundle.sh`
@@ -72,8 +74,13 @@ pull` updates instantly) and the **agent-manager bundle** (`scripts/build-bundle
 versioned snapshot for consumers/CI; see `docs/onboarding-prompt.md`). Releases are
 automatic: on merge to `main`, `.github/workflows/publish-bundle.yml` derives the next
 semver from the Conventional Commits (`scripts/next-version.sh`; type→bump in
-`COMMIT_STANDARD.md`), tags it, and publishes to GitHub Pages, accumulating versions on
-the `gh-pages` branch. The reviewed PR merge is the approval. The bundle is a
+`COMMIT_STANDARD.md`), creates a `vX.Y.Z` GitHub Release with generated notes (the tag is
+the version record) and the built bundle attached as Release **assets** (the version
+archive), then renders the site to GitHub Pages via the official Actions deployment. There
+is **no `gh-pages` branch**: versions accumulate as Release assets, and each deploy
+reconstructs the full site from the Releases (so pinned installs keep working). CI writes
+**only** to tags/Releases and the `github-pages` environment — never to `main` (which is
+PR-only with required signatures). The reviewed PR merge is the approval. The bundle is a
 *generated* artifact; the repo stays the single source of truth.
 
 ## Critical conventions
@@ -187,9 +194,10 @@ pipeline into the model, and the security pass hardens GitHub instead of the cha
 
 **Commits follow Conventional Commits** — the format in `COMMIT_STANDARD.md`
 (`type(scope): imperative summary`). A change under `_standards/` is the
-weighty case: use `security(standards):`, say *why* in the body, and add a
-matching `CHANGELOG.md` entry — that triple is the assurance trail. (This is a
-pointer to `COMMIT_STANDARD.md`, not a copy of it — same single-source rule.)
+weighty case: use `security(standards):` and say *why* in the body — that commit
+(its type drives the version bump, its body records the rationale) is the assurance
+trail; the auto-generated release notes render it. (This is a pointer to
+`COMMIT_STANDARD.md`, not a copy of it — same single-source rule.)
 
 **The description is the trigger.** Claude decides whether to use a skill from
 its `description` frontmatter alone. Make it state both what the skill does AND
@@ -212,8 +220,8 @@ gate must stay meaningful — skills draft and flag; humans approve and accept r
   and the `GDSW-API-*` controls are **house convention** (no external source page). Because
   this standard has no external live site, it does not require re-grounding; changes are
   maintained directly in the library.
-If you touch a standard, check it's still current and note the change in
-CHANGELOG.md with reasoning (assurance trail).
+If you touch a standard, check it's still current and record the reasoning in the
+commit body (the `security(standards):` commit is the assurance trail).
 
 ## How skills behave: the gstack model
 
@@ -254,9 +262,9 @@ estate. Any reviewer's output is advisory and gated back in like any other findi
 
 **`docs/authoring.md` is the contribution rulebook** — conventions for writing a
 skill, the description-as-trigger discipline, the "state what it does NOT do" rule,
-and the "before you merge" checklist (INDEX entry, CHANGELOG note, validate against
-real work, and — for composites — update `docs/flows.md`). Read it before authoring a
-skill or changing a composite's sequence.
+and the "before you merge" checklist (INDEX entry, a clear Conventional Commit, validate
+against real work, and — for composites — update `docs/flows.md`). Read it before authoring
+a skill or changing a composite's sequence.
 
 1. Read `docs/authoring.md` and an existing skill (`threat-model`) as the
    reference pattern.
@@ -265,7 +273,8 @@ skill or changing a composite's sequence.
    output structure, and an explicit "does NOT do" section.
 3. Put any reusable standard in `skills/_standards/<domain>/` and reference it by
    relative path — don't inline it. Put any output format in `skills/_templates/`.
-4. Add a one-line entry to `skills/INDEX.md` and a note to `CHANGELOG.md`.
+4. Add a one-line entry to `skills/INDEX.md` and write a clear Conventional Commit (its
+   type drives the version bump; its body is the assurance trail).
 5. **Validate against real, already-approved work** before trusting it: feed the
    skill the same input a human had for a completed, signed-off artifact, and
    compare. The misses are the iteration backlog — tighten the persona's

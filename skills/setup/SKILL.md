@@ -86,9 +86,10 @@ git pull --ff-only
 Because each link points at a real file in the clone, a content update needs no
 re-link — `git pull` is enough. Re-run `./install.sh` only when a **new skill
 was added** (it needs its own link) or a link is missing/broken (the pull output
-or verification will tell you). After updating, glance at `CHANGELOG.md` and tell
-the user what changed, paying attention to any `_standards/` changes since those
-alter security/compliance output.
+or verification will tell you). After updating, glance at the recent git log (e.g.
+`git log --oneline` since the last pull, or the latest release notes) and tell the
+user what changed, paying attention to any `_standards/` changes since those alter
+security/compliance output.
 
 ## Re-link
 

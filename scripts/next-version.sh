@@ -19,11 +19,12 @@ set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
-# Most recent release tag (vX.Y.Z). None yet ⇒ first release: use VERSION as-is.
+# Most recent release tag (vX.Y.Z). None yet ⇒ first release: seed the starting version.
+# The git tags are the authoritative version record from here on (no VERSION file).
+FIRST_RELEASE="0.1.0"
 last_tag="$(git -C "$REPO_ROOT" describe --tags --abbrev=0 --match 'v[0-9]*' 2>/dev/null || true)"
 if [ -z "$last_tag" ]; then
-  tr -d '[:space:]' < "$REPO_ROOT/VERSION"
-  echo
+  echo "$FIRST_RELEASE"
   exit 0
 fi
 

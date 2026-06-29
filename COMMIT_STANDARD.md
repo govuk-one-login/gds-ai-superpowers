@@ -1,9 +1,9 @@
 # Commit message standard
 
 We use a simple **Conventional Commits**–style format so history is scannable and
-tooling (changelogs, semver) can use it later. It also keeps the assurance trail
-legible: a reviewer should be able to read the log and see what changed in the
-encoded standards and why.
+tooling can use it: CI derives the semver bump from the commit types and renders the
+release notes from the commits. It also keeps the assurance trail legible: a reviewer
+should be able to read the log and see what changed in the encoded standards and why.
 
 ---
 
@@ -58,9 +58,12 @@ Omit scope for broad or multi-area changes.
 A change under `_standards/` alters the security/compliance output of every skill
 that cites it. Such commits should:
 
-1. use the `standards` scope (and usually the `security` type),
-2. say **why** in the body (framework version bump, NCSC guidance change, etc.), and
-3. be matched by an entry in `CHANGELOG.md` — that is the assurance trail.
+1. use the `standards` scope (and usually the `security` type), and
+2. say **why** in the body (framework version bump, NCSC guidance change, etc.).
+
+The commit itself is the assurance trail — its type drives the version bump and its body
+records the rationale, both rendered into the release's auto-generated notes. There is no
+separate changelog file to keep in sync.
 
 ---
 

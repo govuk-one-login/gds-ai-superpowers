@@ -292,11 +292,12 @@ is the audit trail of how the encoded standards evolved — it matters for assur
 
 When adding a skill: read [`docs/authoring.md`](docs/authoring.md), add a line to
 [`skills/INDEX.md`](skills/INDEX.md), and validate it against real, already-approved work
-before merging. See [`CHANGELOG.md`](CHANGELOG.md) for the record of changes.
+before merging. The [release history](../../releases) (tags + auto-generated notes) is the
+record of changes.
 
 Commit messages follow [`COMMIT_STANDARD.md`](COMMIT_STANDARD.md) (Conventional Commits).
-Changes under `_standards/` carry extra weight — note the *why* in the commit body and in
-`CHANGELOG.md`, since they alter every dependent skill's output.
+Changes under `_standards/` carry extra weight — note the *why* in the commit body, since
+they alter every dependent skill's output (the commit is the assurance trail).
 
 ---
 
