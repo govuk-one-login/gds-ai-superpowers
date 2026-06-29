@@ -96,15 +96,20 @@ directory. Because the bundle ships the whole tree intact, every skill's shared
   from the Conventional Commits since the last release tag
   (`scripts/next-version.sh` — see the type→bump table in `COMMIT_STANDARD.md`),
   creates a `vX.Y.Z` GitHub Release with auto-generated notes (the tag is the version
-  record), and publishes the bundle to the `gh-pages` branch (served by GitHub Pages at
+  record) and the built bundle attached as Release **assets** (the version archive), then
+  renders the site to GitHub Pages via the official Actions deployment (served at
   `https://govuk-one-login.github.io/gds-ai-superpowers`). The workflow writes **only** to
-  tags and `gh-pages` — never to `main`, so it is compatible with a PR-only, signed-commit
-  protected `main`. Versions accumulate, so pinned `bundle-version:` installs keep working.
-  **The reviewed PR merge is the approval** — commit types you already wrote drive the
-  version, so label them correctly (a `feat:` → minor, `fix:` → patch, `BREAKING CHANGE:` →
-  major; a docs/chore-only merge publishes nothing).
+  tags/Releases and the `github-pages` environment — never to `main`, and there is **no
+  `gh-pages` branch**, so nothing a write-access dev could overwrite serves the bundle.
+  Versions accumulate as Release assets (each deploy reconstructs the full site from the
+  Releases), so pinned `bundle-version:` installs keep working. **The reviewed PR merge is
+  the approval** — commit types you already wrote drive the version, so label them correctly
+  (a `feat:` → minor, `fix:` → patch, `BREAKING CHANGE:` → major; a docs/chore-only merge
+  publishes nothing).
 
-  **One-time setup:** the repo must be **public**, and Pages must be enabled —
-  Settings → Pages → Source: *Deploy from a branch* → `gh-pages` / root. The `.sha256`
-  sidecar the build emits gives consumers real integrity verification on Pages. To build
+  **One-time setup:** the repo must be **public**; set Pages to deploy from the workflow —
+  Settings → Pages → Source: **GitHub Actions** (not "Deploy from a branch"); and protect
+  the `github-pages` environment (Settings → Environments → `github-pages`) with a
+  deployment branch rule of `main` only, so only a reviewed `main` merge can publish. The
+  `.sha256` sidecar the build emits gives consumers real integrity verification on Pages. To build
   the `dist/agents/` tree locally without publishing, just run `./scripts/build-bundle.sh`.

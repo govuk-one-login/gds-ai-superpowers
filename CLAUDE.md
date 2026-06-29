@@ -75,10 +75,13 @@ versioned snapshot for consumers/CI; see `docs/onboarding-prompt.md`). Releases 
 automatic: on merge to `main`, `.github/workflows/publish-bundle.yml` derives the next
 semver from the Conventional Commits (`scripts/next-version.sh`; type→bump in
 `COMMIT_STANDARD.md`), creates a `vX.Y.Z` GitHub Release with generated notes (the tag is
-the version record), and publishes to GitHub Pages, accumulating versions on the `gh-pages`
-branch. CI writes **only** to tags and `gh-pages`, never to `main` (which is PR-only with
-required signatures). The reviewed PR merge is the approval. The bundle is a *generated*
-artifact; the repo stays the single source of truth.
+the version record) and the built bundle attached as Release **assets** (the version
+archive), then renders the site to GitHub Pages via the official Actions deployment. There
+is **no `gh-pages` branch**: versions accumulate as Release assets, and each deploy
+reconstructs the full site from the Releases (so pinned installs keep working). CI writes
+**only** to tags/Releases and the `github-pages` environment — never to `main` (which is
+PR-only with required signatures). The reviewed PR merge is the approval. The bundle is a
+*generated* artifact; the repo stays the single source of truth.
 
 ## Critical conventions
 

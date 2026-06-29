@@ -1,20 +1,23 @@
 name: Publish bundle to GitHub Pages
 
 # On merge to `main`, derive the next semantic version from the Conventional Commits since
-# the last release tag (scripts/next-version.sh), tag it as a GitHub Release (which renders
-# changelog notes from the reviewed commits), build the agent-manager bundle, and publish it
-# to the `gh-pages` branch (served by GitHub Pages at
-# https://<owner>.github.io/<repo>/agents/...). The reviewed PR merge is the human approval;
-# the version is a deterministic consequence of the commit types.
+# the last release tag (scripts/next-version.sh), then publish the agent-manager bundle —
+# without ever writing to `main` and without a `gh-pages` branch:
 #
-# Versions ACCUMULATE on gh-pages (the build seeds from what's already published and
-# regenerates the index across all of them), so pinned `bundle-version:` installs keep
-# working.
+#   - the version is recorded as a `vX.Y.Z` GitHub Release (auto-generated notes are the
+#     changelog), with the built bundle attached as Release ASSETS — the durable archive;
+#   - the site served at https://<owner>.github.io/<repo>/agents/... is RENDERED to Pages
+#     via the official Actions deployment, gated by the `github-pages` environment.
 #
-# IMPORTANT: this workflow writes ONLY to the `gh-pages` branch and to tags/releases — never
-# to `main`. `main` is PR-only with required signatures (the `Main-Protection` ruleset), so
-# CI must not push commits to it. Tags are not ruleset-protected, so the release tag is the
-# durable record of the version. Only first-party actions (actions/checkout, gh CLI) are used.
+# Versions ACCUMULATE as Release assets, not on a branch. `deploy-pages` replaces the whole
+# site each run, so the job reconstructs every version from its Release before deploying —
+# that is what keeps pinned `bundle-version:` installs working.
+#
+# IMPORTANT: this workflow writes ONLY to tags/Releases and the `github-pages` environment —
+# never to `main` (which is PR-only with required signatures) and never to a `gh-pages`
+# branch (there is none — nothing for a write-access dev to overwrite). Only first-party
+# actions are used (actions/checkout, actions/upload-pages-artifact, actions/deploy-pages)
+# plus the preinstalled gh CLI.
 
 on:
   push:
@@ -22,29 +25,25 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write  # used to create the release/tag and push the gh-pages branch
+  contents: write   # create the release + tag, and read/download prior release assets
+  pages: write      # deploy to GitHub Pages
+  id-token: write   # OIDC token required by actions/deploy-pages
 
 concurrency:
-  group: publish-bundle
+  group: pages
   cancel-in-progress: false
 
 jobs:
   publish:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
     steps:
       - name: Check out source (full history + tags)
         uses: actions/checkout@v4
         with:
           fetch-depth: 0  # next-version.sh needs tags + full log
-
-      # Bring the already-published bundle (all prior versions) into ./published.
-      # First-ever run has no gh-pages branch yet — tolerate that.
-      - name: Check out existing gh-pages (prior versions)
-        uses: actions/checkout@v4
-        continue-on-error: true
-        with:
-          ref: gh-pages
-          path: published
 
       - name: Compute next version
         id: ver
@@ -58,10 +57,34 @@ jobs:
             echo "Releasing version: $version"
           fi
 
-      # Tag the release and let GitHub render the changelog from the reviewed commits.
-      # This creates the vX.Y.Z tag too (tags are not ruleset-protected) — nothing is
-      # pushed to `main`.
-      - name: Tag the release (with generated notes)
+      # Rebuild the version archive from the Releases (the durable store). deploy-pages
+      # replaces the whole site, so every prior version must be restored each run. First
+      # run has no releases yet — tolerate that.
+      - name: Restore prior versions from Releases
+        if: ${{ steps.ver.outputs.version != 'none' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p dist/agents
+          for tag in $(gh release list --limit 1000 --json tagName --jq '.[].tagName'); do
+            ver="${tag#v}"
+            echo "Restoring $tag -> dist/agents/$ver"
+            mkdir -p "dist/agents/$ver"
+            gh release download "$tag" --dir "dist/agents/$ver" \
+              -p 'bundle.zip' -p 'bundle.zip.sha256' -p 'manifest.json' --clobber \
+              || echo "  (no bundle assets on $tag — skipping)"
+          done
+
+      # Build the new version AND regenerate index.json across every version now present in
+      # dist/ (restored priors + the new one) — build-bundle.sh owns the index logic.
+      - name: Build bundle
+        if: ${{ steps.ver.outputs.version != 'none' }}
+        run: ./scripts/build-bundle.sh "${{ steps.ver.outputs.version }}"
+
+      # Record the version as a Release with its bundle attached (the archive). Creating the
+      # release also creates the vX.Y.Z tag and renders changelog notes from the commits.
+      - name: Create release + attach bundle assets
         if: ${{ steps.ver.outputs.version != 'none' }}
         env:
           VERSION: ${{ steps.ver.outputs.version }}
@@ -71,43 +94,22 @@ jobs:
           gh release create "v${VERSION}" \
             --target "${GITHUB_SHA}" \
             --title "v${VERSION}" \
-            --generate-notes
-
-      # Seed dist/ with every previously published version so the index, regenerated
-      # by build-bundle.sh, lists old + new.
-      - name: Seed prior versions into dist/
-        if: ${{ steps.ver.outputs.version != 'none' }}
-        run: |
-          set -euo pipefail
-          mkdir -p dist/agents
-          if [ -d published/agents ]; then
-            cp -R published/agents/. dist/agents/
-            rm -f dist/agents/index.json
-          fi
-
-      - name: Build bundle
-        if: ${{ steps.ver.outputs.version != 'none' }}
-        run: ./scripts/build-bundle.sh "${{ steps.ver.outputs.version }}"
+            --generate-notes \
+            "dist/agents/${VERSION}/bundle.zip" \
+            "dist/agents/${VERSION}/bundle.zip.sha256" \
+            "dist/agents/${VERSION}/manifest.json"
 
       - name: Disable Jekyll
         if: ${{ steps.ver.outputs.version != 'none' }}
         run: touch dist/.nojekyll
 
-      - name: Publish to gh-pages
+      - name: Upload Pages artifact
         if: ${{ steps.ver.outputs.version != 'none' }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          set -euo pipefail
-          cd dist
-          git init -q
-          git checkout -q -b gh-pages
-          git add -A
-          git -c user.name='github-actions[bot]' \
-              -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
-              commit -q -m "Publish bundle v${{ steps.ver.outputs.version }}"
-          git push -f \
-            "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" \
-            gh-pages
-          echo "Published. Pages serves it at:"
-          echo "  https://$(echo "${GITHUB_REPOSITORY%%/*}" | tr '[:upper:]' '[:lower:]').github.io/${GITHUB_REPOSITORY#*/}/agents/index.json"
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+      - name: Deploy to GitHub Pages
+        id: deploy
+        if: ${{ steps.ver.outputs.version != 'none' }}
+        uses: actions/deploy-pages@v4
