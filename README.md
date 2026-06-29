@@ -282,6 +282,8 @@ to correct. Declare it once; every future design and review inherits it.
 Named but not yet built (see [`CLAUDE.md`](CLAUDE.md) for the roadmap):
 a `push-stories-to-jira` step, and the mobile QA drivers.
 
+> For iOS developers: Apple released skills as part of the Xcode 27 beta, available to export through the following command: `xcrun agent skills export ~/.agents/skills`
+
 ---
 
 ## Contributing
