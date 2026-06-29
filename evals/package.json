@@ -1,0 +1,17 @@
+{
+  "name": "gds-ai-superpowers-evals",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "description": "Eval harness: runs the library's own skills headless against sanitized reference cases and grades output quality + human-gate preservation. Phase A (assertion-first). See ../docs/designs/td-evals-harness-phase-a.md.",
+  "bin": {
+    "run-evals": "./src/run-evals.ts"
+  },
+  "scripts": {
+    "run-evals": "bun run src/run-evals.ts",
+    "test": "bun test"
+  },
+  "dependencies": {
+    "yaml": "^2.5.0"
+  }
+}
