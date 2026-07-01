@@ -27,13 +27,15 @@ an atomic skill, not here.
 
 ## What you run, and how
 
-You run two atomic skills, in this **mandatory order**, against a **single shared
+You run three atomic skills, in this **mandatory order**, against a **single shared
 story set**:
 
 1. `../decompose-to-stories/SKILL.md` — TD + requirements → traceable,
    Jira-ready user stories.
 2. `../check-accessibility/SKILL.md` — review the UI-facing stories against
    WCAG 2.2 AA; add accessibility acceptance criteria; flag design-level gaps to the TD.
+3. `../tech-writer/SKILL.md` — prose quality pass on the story set: plain English,
+   abbreviations, repetition, and technical terms.
 
 **Read-then-follow** (the `produce-tech-design` / gstack `autoplan` pattern): at each
 step, Read that skill's `SKILL.md` from disk and follow its workflow inline — its
@@ -73,11 +75,19 @@ emitted ungrounded story stubs, **stop before the accessibility step** and repor
 grounded stories are needed first — check-accessibility cannot scope stories it cannot
 ground. Do not run it against ungrounded stubs.
 
-### 4. Consolidate and hand off
-Ensure both sub-skills' dispositions landed (the story set's and the
-accessibility-review's proposed-updates tables, and any TD write-backs). Close with a
-summary: capabilities/stories produced, requirement coverage, accessibility criteria
-added, design-level accessibility findings raised and their owners, and what is **NOT**
+### 4. Step 3 — tech-writer *(always)*
+Follow `../tech-writer/SKILL.md` against the **complete story set**. It runs its
+two-pass prose review: first clearing cross-section duplication across stories, then
+applying line-level plain English, abbreviation, redundancy, and technical-term checks
+— all gated. Run after both content steps are complete so prose edits are applied to
+stable content. Emit a phase summary.
+
+### 5. Consolidate and hand off
+Ensure all three sub-skills' dispositions landed (the story set's and the
+accessibility-review's proposed-updates tables, any TD write-backs, and tech-writer
+finding dispositions). Close with a summary: capabilities/stories produced, requirement
+coverage, accessibility criteria added, design-level accessibility findings raised and
+their owners, tech-writer findings raised and their dispositions, and what is **NOT**
 done — Jira tickets (human transcribes the Jira-ready output), story sign-off (product
 owner), and accessibility certification (specialist + audit + AT testing).
 

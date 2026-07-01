@@ -37,6 +37,7 @@ gated by a recorded human decision, not by you (see "Risk-tiering" below):
 5. `../check-security-standards/SKILL.md` — verify against the security standards; **proposes the sizing** *(always)*
 6. `../threat-model/SKILL.md` — STRIDE the design *(conditional on the accepted sizing)*
 7. `../cross-model-review/SKILL.md` — independent review, separate Claude subagent *(default-on; skippable with a recorded reason)*
+8. `../tech-writer/SKILL.md` — prose quality pass: plain English, abbreviations, repetition, technical terms *(always)*
 
 **Read-then-follow** (the gstack `autoplan` pattern): at each step, Read that
 skill's `SKILL.md` from disk and follow its workflow inline — its scoping, its
@@ -147,14 +148,22 @@ the machine), presents an independent critique, and gates findings back into the
 **low-risk** TD the human may skip it — only with a **recorded reason** in the Decision &
 change log. When in doubt, run it. Emit a phase summary.
 
-### 9. Consolidate and hand off
+### 9. Step 8 — tech-writer *(always)*
+Follow `../tech-writer/SKILL.md` against the **complete TD**. It runs its two-pass
+prose review: first clearing cross-section duplication, then applying line-level plain
+English, abbreviation, redundancy, and technical-term checks — all gated. Run this
+after all content skills have finished so prose edits are applied to stable content.
+Emit a phase summary.
+
+### 10. Consolidate and hand off
 Ensure every sub-skill's dispositions landed in the TD's **Decision & change log** —
 **including which gated steps ran and which were skipped, and who owned each skip**
 (frame-design skipped? threat-model run or "Not Required"? cross-model-review run or
 skipped-with-reason?). Close with a summary: sections drafted, platform fit confirmed,
 security rows set (and who accepted each), the threat-modeling decision (run / Not
-Required), and the **open risk decisions still awaiting a named owner**. State plainly
-what is NOT yet done (human sign-off; any deferred items).
+Required), tech-writer findings raised and their dispositions, and the **open risk
+decisions still awaiting a named owner**. State plainly what is NOT yet done (human
+sign-off; any deferred items).
 
 ## Applying review comments (the revise loop — not waterfall)
 
@@ -172,11 +181,11 @@ forcing a fresh pass.
 
 This pipeline ships the **complete** architect sequence: **frame-design →
 generate-design-doc → check-engineering-standards → check-platform-constraints →
-check-security-standards → threat-model → cross-model-review**. No named slots remain
-(see CHANGELOG). The order is fixed; the baseline (steps
-1-5) always runs, and the two heavy steps (threat-model, cross-model-review) are
-**risk-tiered** — gated on a recorded human decision, never a silent skip (see
-"Risk-tiering"). Any future atomic slots in by phase.
+check-security-standards → threat-model → cross-model-review → tech-writer**. The
+order is fixed; the baseline (steps 1-5 plus step 8) always runs, and the two heavy
+steps (threat-model, cross-model-review) are **risk-tiered** — gated on a recorded
+human decision, never a silent skip (see "Risk-tiering"). Any future atomic slots in
+by phase.
 
 ## What this skill does NOT do
 - It contains no standards or design logic — orchestration only.
