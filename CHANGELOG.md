@@ -6,6 +6,37 @@ this is the record of what changed and when, which feeds the assurance trail.
 
 ## [Unreleased]
 
+### Added
+- **`tech-writer` skill (atomic).** A two-pass prose-quality review for Technical
+  Designs and story sets, walking every proposed edit back into the document one at a
+  time, gated (Accept / Modify / Reject / Defer). Pass 1 clears cross-section
+  duplication (WRITE-REP-1) before any line-level edits; pass 2 applies plain English
+  (WRITE-PLAIN-*), abbreviation discipline (WRITE-ABBR-*), verbose-phrase trimming
+  (WRITE-REP-2), and technical term/code formatting (WRITE-TECH-*) in priority order.
+  Clarity first, conciseness second. Wired as the final step of `produce-tech-design`
+  (step 8, after cross-model-review) and `prepare-stories` (step 3, after
+  check-accessibility); also runs standalone on any document. Does not restructure
+  content, change meaning, check document structure, or certify publication readiness.
+- **`_standards/writing/govuk-style.md` (new standards domain).** Encodes the
+  GOV.UK technical writing controls (WRITE-* house IDs) used by `tech-writer`:
+  WRITE-PLAIN-1/2 (active voice, sentence length, substitution list), WRITE-ABBR-1/2
+  (spell out on first use; known-exception list), WRITE-REP-1/2 (cross-section
+  duplication; verbose phrases), WRITE-TECH-1/2 (introduce terms on first use; code
+  formatting for literals). Primary source: GOV.UK Content Design guidance and style
+  guide. One source of truth — cited by control ID, never copied into a skill.
+- **`flows.md` updated.** `produce-tech-design` diagram and step table now show step 8
+  (`tech-writer`, mandatory). `prepare-stories` diagram and step table now show step 3
+  (`tech-writer`, mandatory).
+- **`deep-edit` skill (atomic).** A standalone editorial skill that extends
+  `tech-writer`'s prose checks with structural intervention: merging duplicate sections,
+  reordering sections for better flow, splitting overloaded sections, and moving
+  misplaced paragraphs — all gated (Accept / Modify / Reject / Defer). Works on any
+  document regardless of template. Two passes: structure first (1.1 cross-section
+  duplication, 1.2 section order, 1.3 overloaded sections, 1.4 misplaced paragraphs),
+  then the same line-level prose checks as `tech-writer` (WRITE-PLAIN-*, WRITE-ABBR-*,
+  WRITE-REP-2, WRITE-TECH-*). Standalone only — not wired into any composite pipeline.
+  Does not delete information, change meaning, or propose a wholesale new outline.
+
 ### Changed
 - **GDS fork — re-applied the GDS layer.** Replaced the genericised `engineering-way` (ENG-*)
   engineering standard with the **GDS Way** (`_standards/gds-way/`, GDSW-* controls, grounded in

@@ -61,7 +61,8 @@ flowchart TD
   cpc --> cs["5 · check-security-standards"]
   cs --> tm["6 · threat-model<br/>(if sizing ≥ Moderate)"]:::cond
   tm --> xr["7 · cross-model-review<br/>(default-on, skippable)"]:::cond
-  xr --> out([reviewed TD → human sign-off]):::io
+  xr --> tw["8 · tech-writer"]
+  tw --> out([reviewed TD → human sign-off]):::io
   rd["revise-design (re-entry)"]:::re -. review comments .-> g
   classDef io fill:#f3f3f3,stroke:#999,stroke-dasharray:3 3;
   classDef re fill:#fff,stroke:#999,stroke-dasharray:4 4;
@@ -77,6 +78,7 @@ flowchart TD
 | 5 | `check-security-standards` | Mandatory | Security checklist + a **proposed** sizing (you accept it, not the skill). The accepted sizing gates step 6. |
 | 6 | `threat-model` | **Conditional** (on sizing) | **None/Minor** → record Threat Modeling row as "Not Required" (owner + reason), no STRIDE walk. **Moderate/Major** → run in full: STRIDE register, flips the row, lists open risk decisions. |
 | 7 | `cross-model-review` | **Default-on, skippable** | Independent fresh-context critique (runs locally), walked back into the TD. A human may skip a low-risk TD with a recorded reason. |
+| 8 | `tech-writer` | Mandatory | Two-pass prose review: cross-section duplication first (WRITE-REP-1), then line-level plain English, abbreviations, verbose phrases, and technical terms/code formatting (WRITE-PLAIN-*, WRITE-ABBR-*, WRITE-REP-2, WRITE-TECH-*). Every proposed edit gated. |
 | ↺ | `revise-design` | Re-entry | Apply a **list of review comments** back into the TD, one at a time. Use after sign-off feedback or any review — not a numbered step. |
 
 **Risk-tiering rule:** a skipped step is always a **recorded, owned decision** in the
@@ -95,7 +97,8 @@ A reviewed TD becomes a developer-ready, accessibility-checked, Jira-ready backl
 ```mermaid
 flowchart TD
   d["1 · decompose-to-stories"] --> a["2 · check-accessibility<br/>(UI-facing stories only)"]
-  a --> out([story set → product-owner sign-off]):::io
+  a --> tw["3 · tech-writer"]
+  tw --> out([story set → product-owner sign-off]):::io
   d -. ungrounded stubs .-> stop["STOP: fix grounding first"]:::stop
   j["push-stories-to-jira<br/>(not built)"]:::nb -.-> out
   classDef io fill:#f3f3f3,stroke:#999,stroke-dasharray:3 3;
@@ -107,6 +110,7 @@ flowchart TD
 |---|------|------|-------|
 | 1 | `decompose-to-stories` | Mandatory | TD + requirements → vertical, traceable, Jira-ready stories; gaps walk back into the TD. |
 | 2 | `check-accessibility` | **Conditional** | Runs only on the **UI-facing** stories (filtered via each story's "Grounds in" block). Adds WCAG 2.2 AA criteria; flags design-level a11y gaps to the TD. |
+| 3 | `tech-writer` | Mandatory | Two-pass prose review of the story set: cross-story duplication first, then line-level plain English, abbreviations, verbose phrases, and technical terms/code formatting. Every proposed edit gated. |
 | stop | degraded input | Stop / route-back | If step 1 emitted **ungrounded story stubs**, stop before step 2 — a11y can't scope stories it can't ground. Fix grounding first. |
 | — | `push-stories-to-jira` | Named, not built | Awaiting an AI-usable Jira path; ticket creation is human today. |
 
